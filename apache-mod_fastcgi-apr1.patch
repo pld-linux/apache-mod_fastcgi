@@ -1,6 +1,6 @@
 diff -urN mod_fastcgi-2.4.2.org/fcgi_config.c mod_fastcgi-2.4.2/fcgi_config.c
 --- mod_fastcgi-2.4.2.org/fcgi_config.c	2004-10-06 20:30:46.336894330 +0200
-+++ mod_fastcgi-2.4.2/fcgi_config.c	2004-10-06 21:32:46.621910516 +0200
++++ mod_fastcgi-2.4.2/fcgi_config.c	2004-10-06 21:33:50.361255856 +0200
 @@ -50,7 +50,7 @@
      /* Convert port number */
      tmp = (u_short) strtol(portStr, &cvptr, 10);
@@ -60,7 +60,7 @@ diff -urN mod_fastcgi-2.4.2.org/fcgi_config.c mod_fastcgi-2.4.2/fcgi_config.c
  
      if (!*array) {
 -        *array = ap_make_array(p, 10, sizeof(char*));
-+        *array = apr_make_array(p, 10, sizeof(char*));
++        *array = apr_array_make(p, 10, sizeof(char*));
      }
  
      header = (const char **)ap_push_array(*array);
@@ -118,7 +118,7 @@ diff -urN mod_fastcgi-2.4.2.org/fcgi_config.c mod_fastcgi-2.4.2/fcgi_config.c
  #ifdef APACHE2
 diff -urN mod_fastcgi-2.4.2.org/fcgi_pm.c mod_fastcgi-2.4.2/fcgi_pm.c
 --- mod_fastcgi-2.4.2.org/fcgi_pm.c	2004-10-06 20:30:46.337894116 +0200
-+++ mod_fastcgi-2.4.2/fcgi_pm.c	2004-10-06 21:32:46.631908374 +0200
++++ mod_fastcgi-2.4.2/fcgi_pm.c	2004-10-06 21:33:50.371253714 +0200
 @@ -576,7 +576,7 @@
          fs->envp[i - 1] = NULL;
      }
@@ -178,7 +178,7 @@ diff -urN mod_fastcgi-2.4.2.org/fcgi_pm.c mod_fastcgi-2.4.2/fcgi_pm.c
  /*
 diff -urN mod_fastcgi-2.4.2.org/fcgi_protocol.c mod_fastcgi-2.4.2/fcgi_protocol.c
 --- mod_fastcgi-2.4.2.org/fcgi_protocol.c	2004-10-06 20:30:46.338893902 +0200
-+++ mod_fastcgi-2.4.2/fcgi_protocol.c	2004-10-06 21:32:46.634907732 +0200
++++ mod_fastcgi-2.4.2/fcgi_protocol.c	2004-10-06 21:33:50.374253072 +0200
 @@ -135,18 +135,18 @@
  {
      table *e = r->subprocess_env;
@@ -250,7 +250,7 @@ diff -urN mod_fastcgi-2.4.2.org/fcgi_protocol.c mod_fastcgi-2.4.2/fcgi_protocol.
                  /* We're gonna consume all thats here */
 diff -urN mod_fastcgi-2.4.2.org/fcgi_util.c mod_fastcgi-2.4.2/fcgi_util.c
 --- mod_fastcgi-2.4.2.org/fcgi_util.c	2004-10-06 20:30:46.339893687 +0200
-+++ mod_fastcgi-2.4.2/fcgi_util.c	2004-10-06 21:32:46.638906875 +0200
++++ mod_fastcgi-2.4.2/fcgi_util.c	2004-10-06 21:33:50.378252215 +0200
 @@ -55,7 +55,7 @@
  fcgi_util_socket_hash_filename(pool *p, const char *path,
          const char *user, const char *group)
@@ -324,7 +324,7 @@ diff -urN mod_fastcgi-2.4.2.org/fcgi_util.c mod_fastcgi-2.4.2/fcgi_util.c
      }
 diff -urN mod_fastcgi-2.4.2.org/mod_fastcgi.c mod_fastcgi-2.4.2/mod_fastcgi.c
 --- mod_fastcgi-2.4.2.org/mod_fastcgi.c	2004-10-06 20:30:46.355890260 +0200
-+++ mod_fastcgi-2.4.2/mod_fastcgi.c	2004-10-06 21:32:46.652903877 +0200
++++ mod_fastcgi-2.4.2/mod_fastcgi.c	2004-10-06 21:33:50.392249217 +0200
 @@ -267,7 +267,7 @@
  
      /* Register to reset to default values when the config pool is cleaned */
@@ -375,7 +375,7 @@ diff -urN mod_fastcgi-2.4.2.org/mod_fastcgi.c mod_fastcgi-2.4.2/mod_fastcgi.c
      fr->gotHeader = FALSE;
      fr->parseHeader = SCAN_CGI_READING_HEADERS;
 -    fr->header = ap_make_array(p, 1, 1);
-+    fr->header = apr_make_array(p, 1, 1);
++    fr->header = apr_array_make(p, 1, 1);
      fr->fs_stderr = NULL;
      fr->r = r;
      fr->readingEndRequestBody = FALSE;
