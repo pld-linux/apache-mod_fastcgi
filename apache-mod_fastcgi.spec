@@ -26,7 +26,6 @@ of server specific APIs.
 
 %build
 apxs -D SUEXEC_BIN="\"\\\"/usr/sbin/suexec\\\"\"" -o mod_fastcgi.so -c *.c
-strip mod_fastcgi.so
 
 %install
 rm -rf $RPM_BUILD_ROOT
