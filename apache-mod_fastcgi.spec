@@ -3,7 +3,7 @@ Summary(pl):	Obs³uga protoko³u FastCGI dla serwera apache
 Name:		apache-mod_fastcgi
 Version:	2.2.10
 Release:	2
-Copyright:	Open Market
+License:	Open Market
 Group:		Networking/Daemons
 Group(de):	Netzwerkwesen/Server
 Group(pl):	Sieciowe/Serwery
