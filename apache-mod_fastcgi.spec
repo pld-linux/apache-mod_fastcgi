@@ -28,7 +28,7 @@ of server specific APIs.
 %description -l pl
 To jest moduЁ apache dodaj╠cy obsЁugЙ protokoЁu FastCGI. FastCGI jest
 niezale©nym od jЙzyka, skalowalnym, otwartym rozszerzeniem CGI daj╠cym
-du©╠ wydajno╤Ф bez ograniczania API specificznego dla serwera.
+du©╠ wydajno╤Ф bez ograniczania API specyficznego dla serwera.
 
 %description -l ru
 FastCGI - расширение CGI, которое предоставляет возможность создавать
