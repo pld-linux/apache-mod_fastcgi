@@ -6,11 +6,11 @@ Copyright:	Open Market
 Group:		Networking/Daemons
 Group(de):	Netzwerkwesen/Server
 Group(pl):	Sieciowe/Serwery
-URL:		http://www.FastCGI.com/
 Source0:	http://www.FastCGI.com/dist/mod_fastcgi_%{version}.tar.gz
+URL:		http://www.FastCGI.com/
+BuildRequires:	apache-devel
 Requires:	apache >= 1.3.1
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
-BuildRequires:	apache-devel
 
 %description
 This 3rd party module provides support for the FastCGI protocol.
