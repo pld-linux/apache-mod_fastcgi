@@ -1,6 +1,6 @@
 diff -urN mod_fastcgi-2.4.2.org/fcgi_buf.c mod_fastcgi-2.4.2/fcgi_buf.c
 --- mod_fastcgi-2.4.2.org/fcgi_buf.c	2004-10-06 20:30:46.335894544 +0200
-+++ mod_fastcgi-2.4.2/fcgi_buf.c	2004-10-06 21:38:37.730693694 +0200
++++ mod_fastcgi-2.4.2/fcgi_buf.c	2004-10-06 21:40:20.580660501 +0200
 @@ -50,7 +50,7 @@
  {
      Buffer *buf;
@@ -21,7 +21,7 @@ diff -urN mod_fastcgi-2.4.2.org/fcgi_buf.c mod_fastcgi-2.4.2/fcgi_buf.c
          arr->elts = new_elts;
 diff -urN mod_fastcgi-2.4.2.org/fcgi_config.c mod_fastcgi-2.4.2/fcgi_config.c
 --- mod_fastcgi-2.4.2.org/fcgi_config.c	2004-10-06 20:30:46.336894330 +0200
-+++ mod_fastcgi-2.4.2/fcgi_config.c	2004-10-06 21:38:37.736692409 +0200
++++ mod_fastcgi-2.4.2/fcgi_config.c	2004-10-06 21:40:20.585659430 +0200
 @@ -50,7 +50,7 @@
      /* Convert port number */
      tmp = (u_short) strtol(portStr, &cvptr, 10);
@@ -614,7 +614,7 @@ diff -urN mod_fastcgi-2.4.2.org/fcgi_config.c mod_fastcgi-2.4.2/fcgi_config.c
          case FCGI_AUTH_TYPE_AUTHENTICATOR:
 diff -urN mod_fastcgi-2.4.2.org/fcgi_pm.c mod_fastcgi-2.4.2/fcgi_pm.c
 --- mod_fastcgi-2.4.2.org/fcgi_pm.c	2004-10-06 20:30:46.337894116 +0200
-+++ mod_fastcgi-2.4.2/fcgi_pm.c	2004-10-06 21:38:37.746690267 +0200
++++ mod_fastcgi-2.4.2/fcgi_pm.c	2004-10-06 21:40:20.595657288 +0200
 @@ -365,7 +365,7 @@
      if (dnEnd == NULL) {
          dirName = "./";
@@ -762,7 +762,7 @@ diff -urN mod_fastcgi-2.4.2.org/fcgi_pm.c mod_fastcgi-2.4.2/fcgi_pm.c
  /*
 diff -urN mod_fastcgi-2.4.2.org/fcgi_protocol.c mod_fastcgi-2.4.2/fcgi_protocol.c
 --- mod_fastcgi-2.4.2.org/fcgi_protocol.c	2004-10-06 20:30:46.338893902 +0200
-+++ mod_fastcgi-2.4.2/fcgi_protocol.c	2004-10-06 21:38:37.749689624 +0200
++++ mod_fastcgi-2.4.2/fcgi_protocol.c	2004-10-06 21:40:20.598656645 +0200
 @@ -110,7 +110,7 @@
      char *first, *last;
  
@@ -843,7 +843,7 @@ diff -urN mod_fastcgi-2.4.2.org/fcgi_protocol.c mod_fastcgi-2.4.2/fcgi_protocol.
                  /* We're gonna consume all thats here */
 diff -urN mod_fastcgi-2.4.2.org/fcgi_util.c mod_fastcgi-2.4.2/fcgi_util.c
 --- mod_fastcgi-2.4.2.org/fcgi_util.c	2004-10-06 20:30:46.339893687 +0200
-+++ mod_fastcgi-2.4.2/fcgi_util.c	2004-10-06 21:38:37.753688768 +0200
++++ mod_fastcgi-2.4.2/fcgi_util.c	2004-10-06 21:40:20.602655789 +0200
 @@ -55,7 +55,7 @@
  fcgi_util_socket_hash_filename(pool *p, const char *path,
          const char *user, const char *group)
@@ -1014,7 +1014,7 @@ diff -urN mod_fastcgi-2.4.2.org/fcgi_util.c mod_fastcgi-2.4.2/fcgi_util.c
  #ifdef WIN32
 diff -urN mod_fastcgi-2.4.2.org/mod_fastcgi.c mod_fastcgi-2.4.2/mod_fastcgi.c
 --- mod_fastcgi-2.4.2.org/mod_fastcgi.c	2004-10-06 20:30:46.355890260 +0200
-+++ mod_fastcgi-2.4.2/mod_fastcgi.c	2004-10-06 21:38:37.767685769 +0200
++++ mod_fastcgi-2.4.2/mod_fastcgi.c	2004-10-06 21:40:20.616652790 +0200
 @@ -267,7 +267,7 @@
  
      /* Register to reset to default values when the config pool is cleaned */
@@ -1055,6 +1055,20 @@ diff -urN mod_fastcgi-2.4.2.org/mod_fastcgi.c mod_fastcgi-2.4.2/mod_fastcgi.c
 +                r->content_type = apr_pstrdup(r->pool, value);
                  continue;
              }
+ 
+@@ -750,11 +750,11 @@
+             }
+ 
+             /* If the script wants them merged, it can do it */
+-            ap_table_add(r->err_headers_out, name, value);
++            apr_table_add(r->err_headers_out, name, value);
+             continue;
+         }
+         else {
+-            ap_table_add(fr->authHeaders, name, value);
++            apr_table_add(fr->authHeaders, name, value);
+         }
+     }
  
 @@ -765,7 +765,7 @@
       * Who responds, this handler or Apache?
