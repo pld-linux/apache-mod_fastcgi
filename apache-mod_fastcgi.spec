@@ -11,8 +11,8 @@ Group:		Networking/Daemons
 Source0:	http://www.FastCGI.com/dist/mod_fastcgi-%{version}.tar.gz
 # Source0-md5:	e4f5b1b185db4774021163dd0fcd2c56
 URL:		http://www.FastCGI.com/
-BuildRequires:	apache-devel
 BuildRequires:	%{apxs}
+BuildRequires:	apache-devel
 Requires(post,preun):	%{apxs}
 Requires:	apache >= 1.3.1
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -56,7 +56,6 @@ rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{%{_libexecdir},%{_htmldocdir}}
 
 install mod_fastcgi.so $RPM_BUILD_ROOT%{_libexecdir}
-
 install docs/*.html $RPM_BUILD_ROOT%{_htmldocdir}
 
 %clean
