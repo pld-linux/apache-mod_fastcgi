@@ -1,6 +1,6 @@
 diff -urN mod_fastcgi-2.4.2.org/fcgi_config.c mod_fastcgi-2.4.2/fcgi_config.c
 --- mod_fastcgi-2.4.2.org/fcgi_config.c	2004-10-06 20:30:46.336894330 +0200
-+++ mod_fastcgi-2.4.2/fcgi_config.c	2004-10-06 20:51:28.494791133 +0200
++++ mod_fastcgi-2.4.2/fcgi_config.c	2004-10-06 21:21:53.093913562 +0200
 @@ -50,7 +50,7 @@
      /* Convert port number */
      tmp = (u_short) strtol(portStr, &cvptr, 10);
@@ -118,7 +118,7 @@ diff -urN mod_fastcgi-2.4.2.org/fcgi_config.c mod_fastcgi-2.4.2/fcgi_config.c
  #ifdef APACHE2
 diff -urN mod_fastcgi-2.4.2.org/fcgi_pm.c mod_fastcgi-2.4.2/fcgi_pm.c
 --- mod_fastcgi-2.4.2.org/fcgi_pm.c	2004-10-06 20:30:46.337894116 +0200
-+++ mod_fastcgi-2.4.2/fcgi_pm.c	2004-10-06 20:51:28.505788777 +0200
++++ mod_fastcgi-2.4.2/fcgi_pm.c	2004-10-06 21:21:53.103911421 +0200
 @@ -576,7 +576,7 @@
          fs->envp[i - 1] = NULL;
      }
@@ -178,7 +178,7 @@ diff -urN mod_fastcgi-2.4.2.org/fcgi_pm.c mod_fastcgi-2.4.2/fcgi_pm.c
  /*
 diff -urN mod_fastcgi-2.4.2.org/fcgi_protocol.c mod_fastcgi-2.4.2/fcgi_protocol.c
 --- mod_fastcgi-2.4.2.org/fcgi_protocol.c	2004-10-06 20:30:46.338893902 +0200
-+++ mod_fastcgi-2.4.2/fcgi_protocol.c	2004-10-06 20:51:28.507788348 +0200
++++ mod_fastcgi-2.4.2/fcgi_protocol.c	2004-10-06 21:21:53.106910778 +0200
 @@ -135,18 +135,18 @@
  {
      table *e = r->subprocess_env;
@@ -250,7 +250,7 @@ diff -urN mod_fastcgi-2.4.2.org/fcgi_protocol.c mod_fastcgi-2.4.2/fcgi_protocol.
                  /* We're gonna consume all thats here */
 diff -urN mod_fastcgi-2.4.2.org/fcgi_util.c mod_fastcgi-2.4.2/fcgi_util.c
 --- mod_fastcgi-2.4.2.org/fcgi_util.c	2004-10-06 20:30:46.339893687 +0200
-+++ mod_fastcgi-2.4.2/fcgi_util.c	2004-10-06 20:51:28.511787491 +0200
++++ mod_fastcgi-2.4.2/fcgi_util.c	2004-10-06 21:21:53.110909921 +0200
 @@ -55,7 +55,7 @@
  fcgi_util_socket_hash_filename(pool *p, const char *path,
          const char *user, const char *group)
@@ -295,6 +295,24 @@ diff -urN mod_fastcgi-2.4.2.org/fcgi_util.c mod_fastcgi-2.4.2/fcgi_util.c
                             "\" to exactly one IP address", NULL);
          }
      } else {
+@@ -311,7 +311,7 @@
+     fcgi_server *s;
+ 
+     /* @@@ This should now be done in the loop below */
+-    ap_cpystrn(path, ePath, FCGI_MAXPATH);
++    apr_cpystrn(path, ePath, FCGI_MAXPATH);
+     ap_no2slash(path);
+ 
+     for (s = fcgi_servers; s != NULL; s = s->next) {
+@@ -343,7 +343,7 @@
+     char path[FCGI_MAXPATH];
+     fcgi_server *s;
+ 
+-    ap_cpystrn(path, ePath, FCGI_MAXPATH);
++    apr_cpystrn(path, ePath, FCGI_MAXPATH);
+     ap_no2slash(path);
+     
+     for (s = fcgi_servers; s != NULL; s = s->next) {
 @@ -367,7 +367,7 @@
      const char *err;
  
@@ -306,7 +324,7 @@ diff -urN mod_fastcgi-2.4.2.org/fcgi_util.c mod_fastcgi-2.4.2/fcgi_util.c
      }
 diff -urN mod_fastcgi-2.4.2.org/mod_fastcgi.c mod_fastcgi-2.4.2/mod_fastcgi.c
 --- mod_fastcgi-2.4.2.org/mod_fastcgi.c	2004-10-06 20:30:46.355890260 +0200
-+++ mod_fastcgi-2.4.2/mod_fastcgi.c	2004-10-06 20:51:28.526784279 +0200
++++ mod_fastcgi-2.4.2/mod_fastcgi.c	2004-10-06 21:21:53.124906923 +0200
 @@ -267,7 +267,7 @@
  
      /* Register to reset to default values when the config pool is cleaned */
