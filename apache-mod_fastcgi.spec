@@ -1,3 +1,4 @@
+%define 	apxs	/usr/sbin/apxs
 Summary:	Support for the FastCGI protocol for apache webserver
 Summary(pl):	ObsЁuga protokoЁu FastCGI dla serwera apache
 Summary(ru):	FastCGI - более быстрая версия CGI
@@ -24,6 +25,8 @@ Group(uk):	Мережа/Демони
 Source0:	http://www.FastCGI.com/dist/mod_fastcgi_%{version}.tar.gz
 URL:		http://www.FastCGI.com/
 BuildRequires:	apache-devel
+BuildRequires:	%{apxs}
+Prereq:		%{_sbindir}/apxs
 Requires:	apache >= 1.3.1
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -59,7 +62,7 @@ FastCGI - розширення CGI, яке нада╓ можлив╕сть створювати
 %setup -q -n mod_fastcgi_%{version}
 
 %build
-apxs -D SUEXEC_BIN="\"\\\"%{_sbindir}/suexec\\\"\"" -o mod_fastcgi.so -c *.c
+%{apxs} -D SUEXEC_BIN="\"\\\"%{_sbindir}/suexec\\\"\"" -o mod_fastcgi.so -c *.c
 
 %install
 rm -rf $RPM_BUILD_ROOT
