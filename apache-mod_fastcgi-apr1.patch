@@ -1,6 +1,6 @@
 diff -urN mod_fastcgi-2.4.2.org/fcgi_config.c mod_fastcgi-2.4.2/fcgi_config.c
 --- mod_fastcgi-2.4.2.org/fcgi_config.c	2004-10-06 20:30:46.336894330 +0200
-+++ mod_fastcgi-2.4.2/fcgi_config.c	2004-10-06 20:45:23.618957223 +0200
++++ mod_fastcgi-2.4.2/fcgi_config.c	2004-10-06 20:46:31.353446697 +0200
 @@ -191,7 +191,7 @@
      const char **header;
  
@@ -10,9 +10,75 @@ diff -urN mod_fastcgi-2.4.2.org/fcgi_config.c mod_fastcgi-2.4.2/fcgi_config.c
      }
  
      header = (const char **)ap_push_array(*array);
+@@ -419,7 +419,7 @@
+ 
+         dp = ap_popendir(tp, fcgi_dynamic_dir);
+         if (dp == NULL) {
+-            ap_destroy_pool(tp);
++            apr_destroy_pool(tp);
+             return ap_psprintf(p, "can't open dynamic directory \"%s\": %s",
+                 fcgi_dynamic_dir, strerror(errno));
+         }
+@@ -437,7 +437,7 @@
+ 
+ #endif /* !APACHE2 */
+ 
+-    ap_destroy_pool(tp);
++    apr_destroy_pool(tp);
+ 
+     return NULL;
+ }
+diff -urN mod_fastcgi-2.4.2.org/fcgi_pm.c mod_fastcgi-2.4.2/fcgi_pm.c
+--- mod_fastcgi-2.4.2.org/fcgi_pm.c	2004-10-06 20:30:46.337894116 +0200
++++ mod_fastcgi-2.4.2/fcgi_pm.c	2004-10-06 20:46:31.364444341 +0200
+@@ -576,7 +576,7 @@
+         fs->envp[i - 1] = NULL;
+     }
+ 
+-    ap_destroy_pool(tp);
++    apr_destroy_pool(tp);
+ 
+     return proc.pid;
+ 
+@@ -659,7 +659,7 @@
+             "FastCGI: %s is not executable; ensure interpreted scripts have "
+             "\"#!\" as their first line", 
+             fs->fs_path);
+-        ap_destroy_pool(tp);
++        apr_destroy_pool(tp);
+         goto CLEANUP;
+     }
+ 
+@@ -744,7 +744,7 @@
+         CloseHandle(listen_handle);
+     }
+ 
+-    ap_destroy_pool(tp);
++    apr_destroy_pool(tp);
+ 
+     return pid;
+ 
+@@ -1340,7 +1340,7 @@
+         continue;
+ 
+ BagNewServer:
+-        if (sp) ap_destroy_pool(sp);
++        if (sp) apr_destroy_pool(sp);
+ 
+ #ifdef WIN32
+     free(cjob->fs_path);
+@@ -1362,7 +1362,7 @@
+     }
+ #endif
+ 
+-    ap_destroy_pool(tp);
++    apr_destroy_pool(tp);
+ }
+ 
+ /*
 diff -urN mod_fastcgi-2.4.2.org/fcgi_protocol.c mod_fastcgi-2.4.2/fcgi_protocol.c
 --- mod_fastcgi-2.4.2.org/fcgi_protocol.c	2004-10-06 20:30:46.338893902 +0200
-+++ mod_fastcgi-2.4.2/fcgi_protocol.c	2004-10-06 20:45:23.631954438 +0200
++++ mod_fastcgi-2.4.2/fcgi_protocol.c	2004-10-06 20:46:31.367443698 +0200
 @@ -178,7 +178,7 @@
          int i = ph->nelts;
  
@@ -33,7 +99,7 @@ diff -urN mod_fastcgi-2.4.2.org/fcgi_protocol.c mod_fastcgi-2.4.2/fcgi_protocol.
                  /* We're gonna consume all thats here */
 diff -urN mod_fastcgi-2.4.2.org/fcgi_util.c mod_fastcgi-2.4.2/fcgi_util.c
 --- mod_fastcgi-2.4.2.org/fcgi_util.c	2004-10-06 20:30:46.339893687 +0200
-+++ mod_fastcgi-2.4.2/fcgi_util.c	2004-10-06 20:45:23.635953582 +0200
++++ mod_fastcgi-2.4.2/fcgi_util.c	2004-10-06 20:46:31.371442842 +0200
 @@ -367,7 +367,7 @@
      const char *err;
  
@@ -45,7 +111,7 @@ diff -urN mod_fastcgi-2.4.2.org/fcgi_util.c mod_fastcgi-2.4.2/fcgi_util.c
      }
 diff -urN mod_fastcgi-2.4.2.org/mod_fastcgi.c mod_fastcgi-2.4.2/mod_fastcgi.c
 --- mod_fastcgi-2.4.2.org/mod_fastcgi.c	2004-10-06 20:30:46.355890260 +0200
-+++ mod_fastcgi-2.4.2/mod_fastcgi.c	2004-10-06 20:45:23.649950583 +0200
++++ mod_fastcgi-2.4.2/mod_fastcgi.c	2004-10-06 20:46:31.385439843 +0200
 @@ -267,7 +267,7 @@
  
      /* Register to reset to default values when the config pool is cleaned */
