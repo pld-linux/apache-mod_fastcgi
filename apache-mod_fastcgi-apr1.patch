@@ -1,6 +1,6 @@
 diff -urN mod_fastcgi-2.4.2.org/fcgi_buf.c mod_fastcgi-2.4.2/fcgi_buf.c
 --- mod_fastcgi-2.4.2.org/fcgi_buf.c	2004-10-06 20:30:46.335894544 +0200
-+++ mod_fastcgi-2.4.2/fcgi_buf.c	2004-10-06 21:44:49.239106729 +0200
++++ mod_fastcgi-2.4.2/fcgi_buf.c	2004-10-06 21:46:02.348444768 +0200
 @@ -50,7 +50,7 @@
  {
      Buffer *buf;
@@ -21,7 +21,7 @@ diff -urN mod_fastcgi-2.4.2.org/fcgi_buf.c mod_fastcgi-2.4.2/fcgi_buf.c
          arr->elts = new_elts;
 diff -urN mod_fastcgi-2.4.2.org/fcgi_config.c mod_fastcgi-2.4.2/fcgi_config.c
 --- mod_fastcgi-2.4.2.org/fcgi_config.c	2004-10-06 20:30:46.336894330 +0200
-+++ mod_fastcgi-2.4.2/fcgi_config.c	2004-10-06 21:44:49.244105658 +0200
++++ mod_fastcgi-2.4.2/fcgi_config.c	2004-10-06 21:46:02.353443697 +0200
 @@ -50,7 +50,7 @@
      /* Convert port number */
      tmp = (u_short) strtol(portStr, &cvptr, 10);
@@ -618,7 +618,7 @@ diff -urN mod_fastcgi-2.4.2.org/fcgi_config.c mod_fastcgi-2.4.2/fcgi_config.c
          case FCGI_AUTH_TYPE_AUTHENTICATOR:
 diff -urN mod_fastcgi-2.4.2.org/fcgi_pm.c mod_fastcgi-2.4.2/fcgi_pm.c
 --- mod_fastcgi-2.4.2.org/fcgi_pm.c	2004-10-06 20:30:46.337894116 +0200
-+++ mod_fastcgi-2.4.2/fcgi_pm.c	2004-10-06 21:44:49.254103516 +0200
++++ mod_fastcgi-2.4.2/fcgi_pm.c	2004-10-06 21:46:02.363441555 +0200
 @@ -365,7 +365,7 @@
      if (dnEnd == NULL) {
          dirName = "./";
@@ -766,7 +766,7 @@ diff -urN mod_fastcgi-2.4.2.org/fcgi_pm.c mod_fastcgi-2.4.2/fcgi_pm.c
  /*
 diff -urN mod_fastcgi-2.4.2.org/fcgi_protocol.c mod_fastcgi-2.4.2/fcgi_protocol.c
 --- mod_fastcgi-2.4.2.org/fcgi_protocol.c	2004-10-06 20:30:46.338893902 +0200
-+++ mod_fastcgi-2.4.2/fcgi_protocol.c	2004-10-06 21:44:49.257102874 +0200
++++ mod_fastcgi-2.4.2/fcgi_protocol.c	2004-10-06 21:46:02.366440913 +0200
 @@ -110,7 +110,7 @@
      char *first, *last;
  
@@ -847,7 +847,7 @@ diff -urN mod_fastcgi-2.4.2.org/fcgi_protocol.c mod_fastcgi-2.4.2/fcgi_protocol.
                  /* We're gonna consume all thats here */
 diff -urN mod_fastcgi-2.4.2.org/fcgi_util.c mod_fastcgi-2.4.2/fcgi_util.c
 --- mod_fastcgi-2.4.2.org/fcgi_util.c	2004-10-06 20:30:46.339893687 +0200
-+++ mod_fastcgi-2.4.2/fcgi_util.c	2004-10-06 21:44:49.260102231 +0200
++++ mod_fastcgi-2.4.2/fcgi_util.c	2004-10-06 21:46:02.370440056 +0200
 @@ -55,7 +55,7 @@
  fcgi_util_socket_hash_filename(pool *p, const char *path,
          const char *user, const char *group)
@@ -1018,7 +1018,7 @@ diff -urN mod_fastcgi-2.4.2.org/fcgi_util.c mod_fastcgi-2.4.2/fcgi_util.c
  #ifdef WIN32
 diff -urN mod_fastcgi-2.4.2.org/mod_fastcgi.c mod_fastcgi-2.4.2/mod_fastcgi.c
 --- mod_fastcgi-2.4.2.org/mod_fastcgi.c	2004-10-06 20:30:46.355890260 +0200
-+++ mod_fastcgi-2.4.2/mod_fastcgi.c	2004-10-06 21:44:49.275099019 +0200
++++ mod_fastcgi-2.4.2/mod_fastcgi.c	2004-10-06 21:46:02.383437272 +0200
 @@ -267,7 +267,7 @@
  
      /* Register to reset to default values when the config pool is cleaned */
@@ -1231,9 +1231,12 @@ diff -urN mod_fastcgi-2.4.2.org/mod_fastcgi.c mod_fastcgi-2.4.2/mod_fastcgi.c
               (void *)r->err_headers_out, fr->authHeaders, NULL);
      }
  
-@@ -2681,8 +2681,8 @@
+@@ -2679,10 +2679,10 @@
+     }
+ 
      /* Save the existing subprocess_env, because we're gonna muddy it up */
-     fr->saved_subprocess_env = ap_copy_table(r->pool, r->subprocess_env);
+-    fr->saved_subprocess_env = ap_copy_table(r->pool, r->subprocess_env);
++    fr->saved_subprocess_env = apr_table_copy(r->pool, r->subprocess_env);
  
 -    ap_table_setn(r->subprocess_env, "REMOTE_PASSWD", password);
 -    ap_table_setn(r->subprocess_env, "FCGI_APACHE_ROLE", "AUTHENTICATOR");
@@ -1251,9 +1254,12 @@ diff -urN mod_fastcgi-2.4.2.org/mod_fastcgi.c mod_fastcgi-2.4.2/mod_fastcgi.c
          ap_log_rerror(FCGI_LOG_ERR_NOERRNO, r,
              "FastCGI: FastCgiAuthenticator \"%s\" redirected (not allowed)",
              dir_config->authenticator);
-@@ -2748,7 +2748,7 @@
+@@ -2746,9 +2746,9 @@
+     }
+ 
      /* Save the existing subprocess_env, because we're gonna muddy it up */
-     fr->saved_subprocess_env = ap_copy_table(r->pool, r->subprocess_env);
+-    fr->saved_subprocess_env = ap_copy_table(r->pool, r->subprocess_env);
++    fr->saved_subprocess_env = apr_table_copy(r->pool, r->subprocess_env);
  
 -    ap_table_setn(r->subprocess_env, "FCGI_APACHE_ROLE", "AUTHORIZER");
 +    apr_table_setn(r->subprocess_env, "FCGI_APACHE_ROLE", "AUTHORIZER");
@@ -1269,9 +1275,12 @@ diff -urN mod_fastcgi-2.4.2.org/mod_fastcgi.c mod_fastcgi-2.4.2/mod_fastcgi.c
          ap_log_rerror(FCGI_LOG_ERR_NOERRNO, r,
              "FastCGI: FastCgiAuthorizer \"%s\" redirected (not allowed)",
              dir_config->authorizer);
-@@ -2808,7 +2808,7 @@
+@@ -2806,9 +2806,9 @@
+     }
+ 
      /* Save the existing subprocess_env, because we're gonna muddy it up */
-     fr->saved_subprocess_env = ap_copy_table(r->pool, r->subprocess_env);
+-    fr->saved_subprocess_env = ap_copy_table(r->pool, r->subprocess_env);
++    fr->saved_subprocess_env = apr_table_copy(r->pool, r->subprocess_env);
  
 -    ap_table_setn(r->subprocess_env, "FCGI_APACHE_ROLE", "ACCESS_CHECKER");
 +    apr_table_setn(r->subprocess_env, "FCGI_APACHE_ROLE", "ACCESS_CHECKER");
