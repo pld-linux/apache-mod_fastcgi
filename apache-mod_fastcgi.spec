@@ -1,7 +1,7 @@
 Summary:	Support for the FastCGI protocol for apache webserver
 Name:		apache-mod_fastcgi
 Version:	2.2.8
-Release:	1
+Release:	2
 Copyright:	Open Market
 Group:		Networking/Daemons
 Group(de):	Netzwerkwesen/Server
@@ -25,7 +25,7 @@ of server specific APIs.
 %setup -q -n mod_fastcgi_%{version}
 
 %build
-apxs -o mod_fastcgi.so -c *.c
+apxs -D SUEXEC_BIN="/usr/sbin/suexec" -o mod_fastcgi.so -c *.c
 strip mod_fastcgi.so
 
 %install
@@ -39,6 +39,22 @@ install docs/*.html $RPM_BUILD_ROOT%{_htmldocdir}
 gzip -9nf docs/LICENSE.TERMS CHANGES
 
 strip --strip-unneeded $RPM_BUILD_ROOT%{_libexecdir}/*
+
+%post
+%{_sbindir}/apxs -e -a -n fastcgi %{_libexecdir}/mod_fastcgi.so 1>&2
+if [ -f /var/lock/subsys/httpd ]; then
+	/etc/rc.d/init.d/httpd restart 1>&2
+else
+	echo "Run \"/etc/rc.d/init.d/httpd start\" to start apache http daemon."
+fi
+
+%preun
+if [ "$1" = "0" ]; then
+	%{_sbindir}/apxs -e -A -n fastcgi %{_libexecdir}/mod_fastcgi.so 1>&2
+	if [ -f /var/lock/subsys/httpd ]; then
+		/etc/rc.d/init.d/httpd restart 1>&2
+	fi
+fi
 
 %clean
 rm -rf $RPM_BUILD_ROOT
