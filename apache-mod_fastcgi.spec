@@ -59,7 +59,7 @@ install mod_fastcgi.so $RPM_BUILD_ROOT%{_libexecdir}
 install docs/*.html $RPM_BUILD_ROOT%{_htmldocdir}
 
 %post
-%{_sbindir}/apxs -e -a -n fastcgi %{_libexecdir}/mod_fastcgi.so 1>&2
+%{apxs} -e -a -n fastcgi %{_libexecdir}/mod_fastcgi.so 1>&2
 if [ -f /var/lock/subsys/httpd ]; then
 	/etc/rc.d/init.d/httpd restart 1>&2
 else
@@ -68,7 +68,7 @@ fi
 
 %preun
 if [ "$1" = "0" ]; then
-	%{_sbindir}/apxs -e -A -n fastcgi %{_libexecdir}/mod_fastcgi.so 1>&2
+	%{apxs} -e -A -n fastcgi %{_libexecdir}/mod_fastcgi.so 1>&2
 	if [ -f /var/lock/subsys/httpd ]; then
 		/etc/rc.d/init.d/httpd restart 1>&2
 	fi
