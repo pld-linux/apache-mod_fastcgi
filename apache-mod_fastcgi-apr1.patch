@@ -1,0 +1,21 @@
+diff -urN mod_fastcgi-2.4.2.org/mod_fastcgi.c mod_fastcgi-2.4.2/mod_fastcgi.c
+--- mod_fastcgi-2.4.2.org/mod_fastcgi.c	2004-10-06 20:30:46.355890260 +0200
++++ mod_fastcgi-2.4.2/mod_fastcgi.c	2004-10-06 20:35:44.632991387 +0200
+@@ -267,7 +267,7 @@
+ 
+     /* Register to reset to default values when the config pool is cleaned */
+     ap_block_alarms();
+-    ap_register_cleanup(p, NULL, fcgi_config_reset_globals, ap_null_cleanup);
++    ap_register_cleanup(p, NULL, fcgi_config_reset_globals, apr_pool_cleanup_null);
+     ap_unblock_alarms();
+ 
+ #ifdef APACHE2
+@@ -2318,7 +2318,7 @@
+     }
+ 
+     ap_block_alarms();
+-    ap_register_cleanup(rp, (void *)fr, cleanup, ap_null_cleanup);
++    ap_register_cleanup(rp, (void *)fr, cleanup, apr_pool_cleanup_null);
+     ap_unblock_alarms();
+ 
+ #ifdef WIN32
