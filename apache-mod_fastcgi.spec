@@ -4,15 +4,15 @@ Summary(pl):	Obs³uga protoko³u FastCGI dla serwera apache
 Summary(ru):	FastCGI - ÂÏÌÅÅ ÂÙÓÔÒÁÑ ×ÅÒÓÉÑ CGI
 Summary(uk):	FastCGI - Â¦ÌØÛ Û×ÉÄËÁ ×ÅÒÓ¦Ñ CGI
 Name:		apache-mod_fastcgi
-Version:	2.2.12
+Version:	2.4.0
 Release:	1
-License:	Open Market
+License:	distributable
 Group:		Networking/Daemons
 Source0:	http://www.FastCGI.com/dist/mod_fastcgi-%{version}.tar.gz
 URL:		http://www.FastCGI.com/
 BuildRequires:	apache-devel
 BuildRequires:	%{apxs}
-Prereq:		%{_sbindir}/apxs
+Requires(post,preun):	%{apxs}
 Requires:	apache >= 1.3.1
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -58,6 +58,9 @@ install mod_fastcgi.so $RPM_BUILD_ROOT%{_libexecdir}
 
 install docs/*.html $RPM_BUILD_ROOT%{_htmldocdir}
 
+%clean
+rm -rf $RPM_BUILD_ROOT
+
 %post
 %{apxs} -e -a -n fastcgi %{_libexecdir}/mod_fastcgi.so 1>&2
 if [ -f /var/lock/subsys/httpd ]; then
@@ -73,9 +76,6 @@ if [ "$1" = "0" ]; then
 		/etc/rc.d/init.d/httpd restart 1>&2
 	fi
 fi
-
-%clean
-rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
