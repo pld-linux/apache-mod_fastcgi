@@ -1,6 +1,6 @@
 diff -urN mod_fastcgi-2.4.2.org/fcgi_buf.c mod_fastcgi-2.4.2/fcgi_buf.c
 --- mod_fastcgi-2.4.2.org/fcgi_buf.c	2004-10-06 20:30:46.335894544 +0200
-+++ mod_fastcgi-2.4.2/fcgi_buf.c	2004-10-06 21:34:57.412891616 +0200
++++ mod_fastcgi-2.4.2/fcgi_buf.c	2004-10-06 21:35:48.998840536 +0200
 @@ -50,7 +50,7 @@
  {
      Buffer *buf;
@@ -21,7 +21,7 @@ diff -urN mod_fastcgi-2.4.2.org/fcgi_buf.c mod_fastcgi-2.4.2/fcgi_buf.c
          arr->elts = new_elts;
 diff -urN mod_fastcgi-2.4.2.org/fcgi_config.c mod_fastcgi-2.4.2/fcgi_config.c
 --- mod_fastcgi-2.4.2.org/fcgi_config.c	2004-10-06 20:30:46.336894330 +0200
-+++ mod_fastcgi-2.4.2/fcgi_config.c	2004-10-06 21:34:57.417890545 +0200
++++ mod_fastcgi-2.4.2/fcgi_config.c	2004-10-06 21:35:49.003839465 +0200
 @@ -50,7 +50,7 @@
      /* Convert port number */
      tmp = (u_short) strtol(portStr, &cvptr, 10);
@@ -119,6 +119,15 @@ diff -urN mod_fastcgi-2.4.2.org/fcgi_config.c mod_fastcgi-2.4.2/fcgi_config.c
  
      return NULL;
  }
+@@ -475,7 +475,7 @@
+             name);
+     }
+ 
+-    arg_nc = ap_pstrdup(cmd->pool, arg);
++    arg_nc = apr_pstrdup(cmd->pool, arg);
+ 
+ #ifndef WIN32
+ 
 @@ -498,7 +498,7 @@
      fcgi_socket_dir = arg_nc;
  
@@ -184,7 +193,7 @@ diff -urN mod_fastcgi-2.4.2.org/fcgi_config.c mod_fastcgi-2.4.2/fcgi_config.c
      dir_config->authorizer_options = FCGI_AUTHORITATIVE;
 diff -urN mod_fastcgi-2.4.2.org/fcgi_pm.c mod_fastcgi-2.4.2/fcgi_pm.c
 --- mod_fastcgi-2.4.2.org/fcgi_pm.c	2004-10-06 20:30:46.337894116 +0200
-+++ mod_fastcgi-2.4.2/fcgi_pm.c	2004-10-06 21:34:57.428888189 +0200
++++ mod_fastcgi-2.4.2/fcgi_pm.c	2004-10-06 21:35:49.014837109 +0200
 @@ -365,7 +365,7 @@
      if (dnEnd == NULL) {
          dirName = "./";
@@ -242,6 +251,18 @@ diff -urN mod_fastcgi-2.4.2.org/fcgi_pm.c mod_fastcgi-2.4.2/fcgi_pm.c
  
      return pid;
  
+@@ -1072,9 +1072,9 @@
+             
+ #ifdef WIN32
+             s->mutex_env_string = ap_psprintf(sp, "_FCGI_MUTEX_=%ld", mutex);
+-            s->fs_path = ap_pstrdup(sp, cjob->fs_path);
++            s->fs_path = apr_pstrdup(sp, cjob->fs_path);
+ #else
+-            s->fs_path = ap_pstrdup(sp, execName);
++            s->fs_path = apr_pstrdup(sp, execName);
+ #endif
+             ap_getparents(s->fs_path);
+             ap_no2slash(s->fs_path);
 @@ -1094,7 +1094,7 @@
              s->socket_path = fcgi_util_socket_make_path_absolute(sp, s->socket_path, 1);
  
@@ -251,6 +272,30 @@ diff -urN mod_fastcgi-2.4.2.org/fcgi_pm.c mod_fastcgi-2.4.2/fcgi_pm.c
              err = fcgi_util_socket_make_domain_addr(tp, (struct sockaddr_un **)&s->socket_addr,
                                            &s->socket_addr_len, s->socket_path);
              if (err) {
+@@ -1120,7 +1120,7 @@
+                         goto BagNewServer;
+                     }
+                     s->uid = pw->pw_uid;
+-                    s->user = ap_pstrdup(sp, user);
++                    s->user = apr_pstrdup(sp, user);
+                     s->username = s->user;
+ 
+                     s->gid = pw->pw_gid;
+@@ -1137,11 +1137,11 @@
+                             execName, (long)s->uid);
+                         goto BagNewServer;
+                     }
+-                    s->user = ap_pstrdup(sp, user);
+-                    s->username = ap_pstrdup(sp, pw->pw_name);
++                    s->user = apr_pstrdup(sp, user);
++                    s->username = apr_pstrdup(sp, pw->pw_name);
+ 
+                     s->gid = (gid_t)atol(group);
+-                    s->group = ap_pstrdup(sp, group);
++                    s->group = apr_pstrdup(sp, group);
+                 }
+             }
+ #else
 @@ -1340,7 +1340,7 @@
          continue;
  
@@ -271,7 +316,7 @@ diff -urN mod_fastcgi-2.4.2.org/fcgi_pm.c mod_fastcgi-2.4.2/fcgi_pm.c
  /*
 diff -urN mod_fastcgi-2.4.2.org/fcgi_protocol.c mod_fastcgi-2.4.2/fcgi_protocol.c
 --- mod_fastcgi-2.4.2.org/fcgi_protocol.c	2004-10-06 20:30:46.338893902 +0200
-+++ mod_fastcgi-2.4.2/fcgi_protocol.c	2004-10-06 21:34:57.430887761 +0200
++++ mod_fastcgi-2.4.2/fcgi_protocol.c	2004-10-06 21:35:49.017836467 +0200
 @@ -110,7 +110,7 @@
      char *first, *last;
  
@@ -352,7 +397,7 @@ diff -urN mod_fastcgi-2.4.2.org/fcgi_protocol.c mod_fastcgi-2.4.2/fcgi_protocol.
                  /* We're gonna consume all thats here */
 diff -urN mod_fastcgi-2.4.2.org/fcgi_util.c mod_fastcgi-2.4.2/fcgi_util.c
 --- mod_fastcgi-2.4.2.org/fcgi_util.c	2004-10-06 20:30:46.339893687 +0200
-+++ mod_fastcgi-2.4.2/fcgi_util.c	2004-10-06 21:34:57.435886690 +0200
++++ mod_fastcgi-2.4.2/fcgi_util.c	2004-10-06 21:35:49.021835610 +0200
 @@ -55,7 +55,7 @@
  fcgi_util_socket_hash_filename(pool *p, const char *path,
          const char *user, const char *group)
@@ -448,6 +493,24 @@ diff -urN mod_fastcgi-2.4.2.org/fcgi_util.c mod_fastcgi-2.4.2/fcgi_util.c
  
      /* Initialize anything who's init state is not zeroizzzzed */
      s->listenQueueDepth = FCGI_DEFAULT_LISTEN_Q;
+@@ -467,7 +467,7 @@
+             "you probably need to modify the User directive: %s",
+             (long)uid, strerror(errno));
+     }
+-    s->user = ap_pstrdup(p, pw->pw_name);
++    s->user = apr_pstrdup(p, pw->pw_name);
+     s->username = s->user;
+ 
+     s->gid = gid;
+@@ -478,7 +478,7 @@
+             "you probably need to modify the Group directive: %s",
+             (long)gid, strerror(errno));
+     }
+-    s->group = ap_pstrdup(p, gr->gr_name);
++    s->group = apr_pstrdup(p, gr->gr_name);
+ 
+ #endif /* !WIN32 */
+ 
 @@ -492,7 +492,7 @@
  fcgi_util_fs_create_procs(pool *p, int num)
  {
@@ -459,7 +522,7 @@ diff -urN mod_fastcgi-2.4.2.org/fcgi_util.c mod_fastcgi-2.4.2/fcgi_util.c
  #ifdef WIN32
 diff -urN mod_fastcgi-2.4.2.org/mod_fastcgi.c mod_fastcgi-2.4.2/mod_fastcgi.c
 --- mod_fastcgi-2.4.2.org/mod_fastcgi.c	2004-10-06 20:30:46.355890260 +0200
-+++ mod_fastcgi-2.4.2/mod_fastcgi.c	2004-10-06 21:34:57.449883691 +0200
++++ mod_fastcgi-2.4.2/mod_fastcgi.c	2004-10-06 21:35:49.036832397 +0200
 @@ -267,7 +267,7 @@
  
      /* Register to reset to default values when the config pool is cleaned */
@@ -478,6 +541,24 @@ diff -urN mod_fastcgi-2.4.2.org/mod_fastcgi.c mod_fastcgi-2.4.2/mod_fastcgi.c
  #else
  
      if (fcgi_socket_dir == NULL)
+@@ -726,7 +726,7 @@
+             }
+             hasStatus = TRUE;
+             r->status = statusValue;
+-            r->status_line = ap_pstrdup(r->pool, value);
++            r->status_line = apr_pstrdup(r->pool, value);
+             continue;
+         }
+ 
+@@ -736,7 +736,7 @@
+                     goto DuplicateNotAllowed;
+                 }
+                 hasContentType = TRUE;
+-                r->content_type = ap_pstrdup(r->pool, value);
++                r->content_type = apr_pstrdup(r->pool, value);
+                 continue;
+             }
+ 
 @@ -765,7 +765,7 @@
       * Who responds, this handler or Apache?
       */
@@ -487,15 +568,27 @@ diff -urN mod_fastcgi-2.4.2.org/mod_fastcgi.c mod_fastcgi-2.4.2/mod_fastcgi.c
          /*
           * Based on internal redirect handling in mod_cgi.c...
           *
-@@ -1019,7 +1019,7 @@
+@@ -1019,9 +1019,9 @@
          char *end = strchr(r->uri + 2, '/');
  
          if (end)
 -            *user = memcpy(ap_pcalloc(r->pool, end - r->uri), r->uri + 1, end - r->uri - 1);
 +            *user = memcpy(apr_pcalloc(r->pool, end - r->uri), r->uri + 1, end - r->uri - 1);
          else
-             *user = ap_pstrdup(r->pool, r->uri + 1);
+-            *user = ap_pstrdup(r->pool, r->uri + 1);
++            *user = apr_pstrdup(r->pool, r->uri + 1);
          *group = "-";
+     }
+     else {
+@@ -1225,7 +1225,7 @@
+         {
+             /* xxx this handle should live somewhere (see CloseHandle()s below too) */
+             char * wait_npipe_mutex_name, * cp;
+-            wait_npipe_mutex_name = cp = ap_pstrdup(rp, socket_path);
++            wait_npipe_mutex_name = cp = apr_pstrdup(rp, socket_path);
+             while ((cp = strchr(cp, '\\'))) *cp = '/';
+             
+             wait_npipe_mutex = CreateMutex(NULL, FALSE, wait_npipe_mutex_name);
 @@ -2318,7 +2318,7 @@
      }
  
