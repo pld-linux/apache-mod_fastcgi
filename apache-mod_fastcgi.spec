@@ -9,6 +9,7 @@ Release:	1
 License:	distributable
 Group:		Networking/Daemons
 Source0:	http://www.FastCGI.com/dist/mod_fastcgi-%{version}.tar.gz
+# Source0-md5:	e4f5b1b185db4774021163dd0fcd2c56
 URL:		http://www.FastCGI.com/
 BuildRequires:	apache-devel
 BuildRequires:	%{apxs}
