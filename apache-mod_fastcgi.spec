@@ -5,7 +5,7 @@ Summary(ru):	FastCGI - более быстрая версия CGI
 Summary(uk):	FastCGI - б╕льш швидка верс╕я CGI
 Name:		apache-mod_fastcgi
 Version:	2.2.12
-Release:	0.1
+Release:	1
 License:	Open Market
 Group:		Networking/Daemons
 Source0:	http://www.FastCGI.com/dist/mod_fastcgi-%{version}.tar.gz
@@ -58,8 +58,6 @@ install mod_fastcgi.so $RPM_BUILD_ROOT%{_libexecdir}
 
 install docs/*.html $RPM_BUILD_ROOT%{_htmldocdir}
 
-gzip -9nf docs/LICENSE.TERMS CHANGES
-
 %post
 %{_sbindir}/apxs -e -a -n fastcgi %{_libexecdir}/mod_fastcgi.so 1>&2
 if [ -f /var/lock/subsys/httpd ]; then
@@ -81,6 +79,6 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%doc docs/*.gz *.gz
+%doc docs/LICENSE.TERMS CHANGES
 %doc %{_htmldocdir}/*
 %attr(755,root,root) %{_libexecdir}/*
