@@ -1,6 +1,6 @@
 diff -urN mod_fastcgi-2.4.2.org/fcgi_buf.c mod_fastcgi-2.4.2/fcgi_buf.c
 --- mod_fastcgi-2.4.2.org/fcgi_buf.c	2004-10-06 20:30:46.335894544 +0200
-+++ mod_fastcgi-2.4.2/fcgi_buf.c	2004-10-06 21:43:03.369786748 +0200
++++ mod_fastcgi-2.4.2/fcgi_buf.c	2004-10-06 21:44:49.239106729 +0200
 @@ -50,7 +50,7 @@
  {
      Buffer *buf;
@@ -21,7 +21,7 @@ diff -urN mod_fastcgi-2.4.2.org/fcgi_buf.c mod_fastcgi-2.4.2/fcgi_buf.c
          arr->elts = new_elts;
 diff -urN mod_fastcgi-2.4.2.org/fcgi_config.c mod_fastcgi-2.4.2/fcgi_config.c
 --- mod_fastcgi-2.4.2.org/fcgi_config.c	2004-10-06 20:30:46.336894330 +0200
-+++ mod_fastcgi-2.4.2/fcgi_config.c	2004-10-06 21:43:03.374785677 +0200
++++ mod_fastcgi-2.4.2/fcgi_config.c	2004-10-06 21:44:49.244105658 +0200
 @@ -50,7 +50,7 @@
      /* Convert port number */
      tmp = (u_short) strtol(portStr, &cvptr, 10);
@@ -92,7 +92,7 @@ diff -urN mod_fastcgi-2.4.2.org/fcgi_config.c mod_fastcgi-2.4.2/fcgi_config.c
      }
      else {
          *(envp + *envc) = var;
-@@ -191,7 +191,7 @@
+@@ -191,10 +191,10 @@
      const char **header;
  
      if (!*array) {
@@ -100,7 +100,11 @@ diff -urN mod_fastcgi-2.4.2.org/fcgi_config.c mod_fastcgi-2.4.2/fcgi_config.c
 +        *array = apr_array_make(p, 10, sizeof(char*));
      }
  
-     header = (const char **)ap_push_array(*array);
+-    header = (const char **)ap_push_array(*array);
++    header = (const char **)apr_array_push(*array);
+     *header = ap_getword_conf(p, arg);
+ 
+     return header ? NULL : "\"\"";
 @@ -206,7 +206,7 @@
  static const char *invalid_value(pool *p, const char *cmd, const char *id,
          const char *opt, const char *err)
@@ -614,7 +618,7 @@ diff -urN mod_fastcgi-2.4.2.org/fcgi_config.c mod_fastcgi-2.4.2/fcgi_config.c
          case FCGI_AUTH_TYPE_AUTHENTICATOR:
 diff -urN mod_fastcgi-2.4.2.org/fcgi_pm.c mod_fastcgi-2.4.2/fcgi_pm.c
 --- mod_fastcgi-2.4.2.org/fcgi_pm.c	2004-10-06 20:30:46.337894116 +0200
-+++ mod_fastcgi-2.4.2/fcgi_pm.c	2004-10-06 21:43:03.385783321 +0200
++++ mod_fastcgi-2.4.2/fcgi_pm.c	2004-10-06 21:44:49.254103516 +0200
 @@ -365,7 +365,7 @@
      if (dnEnd == NULL) {
          dirName = "./";
@@ -762,7 +766,7 @@ diff -urN mod_fastcgi-2.4.2.org/fcgi_pm.c mod_fastcgi-2.4.2/fcgi_pm.c
  /*
 diff -urN mod_fastcgi-2.4.2.org/fcgi_protocol.c mod_fastcgi-2.4.2/fcgi_protocol.c
 --- mod_fastcgi-2.4.2.org/fcgi_protocol.c	2004-10-06 20:30:46.338893902 +0200
-+++ mod_fastcgi-2.4.2/fcgi_protocol.c	2004-10-06 21:43:03.388782679 +0200
++++ mod_fastcgi-2.4.2/fcgi_protocol.c	2004-10-06 21:44:49.257102874 +0200
 @@ -110,7 +110,7 @@
      char *first, *last;
  
@@ -843,7 +847,7 @@ diff -urN mod_fastcgi-2.4.2.org/fcgi_protocol.c mod_fastcgi-2.4.2/fcgi_protocol.
                  /* We're gonna consume all thats here */
 diff -urN mod_fastcgi-2.4.2.org/fcgi_util.c mod_fastcgi-2.4.2/fcgi_util.c
 --- mod_fastcgi-2.4.2.org/fcgi_util.c	2004-10-06 20:30:46.339893687 +0200
-+++ mod_fastcgi-2.4.2/fcgi_util.c	2004-10-06 21:43:03.392781822 +0200
++++ mod_fastcgi-2.4.2/fcgi_util.c	2004-10-06 21:44:49.260102231 +0200
 @@ -55,7 +55,7 @@
  fcgi_util_socket_hash_filename(pool *p, const char *path,
          const char *user, const char *group)
@@ -1014,7 +1018,7 @@ diff -urN mod_fastcgi-2.4.2.org/fcgi_util.c mod_fastcgi-2.4.2/fcgi_util.c
  #ifdef WIN32
 diff -urN mod_fastcgi-2.4.2.org/mod_fastcgi.c mod_fastcgi-2.4.2/mod_fastcgi.c
 --- mod_fastcgi-2.4.2.org/mod_fastcgi.c	2004-10-06 20:30:46.355890260 +0200
-+++ mod_fastcgi-2.4.2/mod_fastcgi.c	2004-10-06 21:43:03.406778823 +0200
++++ mod_fastcgi-2.4.2/mod_fastcgi.c	2004-10-06 21:44:49.275099019 +0200
 @@ -267,7 +267,7 @@
  
      /* Register to reset to default values when the config pool is cleaned */
