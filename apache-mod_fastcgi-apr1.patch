@@ -1,6 +1,6 @@
 diff -urN mod_fastcgi-2.4.2.org/fcgi_buf.c mod_fastcgi-2.4.2/fcgi_buf.c
 --- mod_fastcgi-2.4.2.org/fcgi_buf.c	2004-10-06 20:30:46.335894544 +0200
-+++ mod_fastcgi-2.4.2/fcgi_buf.c	2004-10-06 21:47:12.451426848 +0200
++++ mod_fastcgi-2.4.2/fcgi_buf.c	2004-10-06 21:48:15.300962809 +0200
 @@ -50,7 +50,7 @@
  {
      Buffer *buf;
@@ -21,7 +21,7 @@ diff -urN mod_fastcgi-2.4.2.org/fcgi_buf.c mod_fastcgi-2.4.2/fcgi_buf.c
          arr->elts = new_elts;
 diff -urN mod_fastcgi-2.4.2.org/fcgi_config.c mod_fastcgi-2.4.2/fcgi_config.c
 --- mod_fastcgi-2.4.2.org/fcgi_config.c	2004-10-06 20:30:46.336894330 +0200
-+++ mod_fastcgi-2.4.2/fcgi_config.c	2004-10-06 21:47:12.455425992 +0200
++++ mod_fastcgi-2.4.2/fcgi_config.c	2004-10-06 21:48:15.306961524 +0200
 @@ -50,7 +50,7 @@
      /* Convert port number */
      tmp = (u_short) strtol(portStr, &cvptr, 10);
@@ -618,7 +618,7 @@ diff -urN mod_fastcgi-2.4.2.org/fcgi_config.c mod_fastcgi-2.4.2/fcgi_config.c
          case FCGI_AUTH_TYPE_AUTHENTICATOR:
 diff -urN mod_fastcgi-2.4.2.org/fcgi_pm.c mod_fastcgi-2.4.2/fcgi_pm.c
 --- mod_fastcgi-2.4.2.org/fcgi_pm.c	2004-10-06 20:30:46.337894116 +0200
-+++ mod_fastcgi-2.4.2/fcgi_pm.c	2004-10-06 21:47:12.465423850 +0200
++++ mod_fastcgi-2.4.2/fcgi_pm.c	2004-10-06 21:48:15.317959168 +0200
 @@ -365,7 +365,7 @@
      if (dnEnd == NULL) {
          dirName = "./";
@@ -766,8 +766,8 @@ diff -urN mod_fastcgi-2.4.2.org/fcgi_pm.c mod_fastcgi-2.4.2/fcgi_pm.c
  /*
 diff -urN mod_fastcgi-2.4.2.org/fcgi_protocol.c mod_fastcgi-2.4.2/fcgi_protocol.c
 --- mod_fastcgi-2.4.2.org/fcgi_protocol.c	2004-10-06 20:30:46.338893902 +0200
-+++ mod_fastcgi-2.4.2/fcgi_protocol.c	2004-10-06 21:47:12.468423207 +0200
-@@ -110,7 +110,7 @@
++++ mod_fastcgi-2.4.2/fcgi_protocol.c	2004-10-06 21:48:15.319958740 +0200
+@@ -110,21 +110,21 @@
      char *first, *last;
  
      if (r->the_request == NULL)
@@ -776,8 +776,17 @@ diff -urN mod_fastcgi-2.4.2.org/fcgi_protocol.c mod_fastcgi-2.4.2/fcgi_protocol.
  
      first = r->the_request;	/* use the request-line */
  
-@@ -124,7 +124,7 @@
-     while (*last && !ap_isspace(*last))
+-    while (*first && !ap_isspace(*first))
++    while (*first && !apr_isspace(*first))
+         ++first;		    /* skip over the method */
+ 
+-    while (ap_isspace(*first))
++    while (apr_isspace(*first))
+         ++first;		    /* and the space(s) */
+ 
+     last = first;
+-    while (*last && !ap_isspace(*last))
++    while (*last && !apr_isspace(*last))
          ++last;			    /* end at next whitespace */
  
 -    return ap_pstrndup(r->pool, first, last - first);
@@ -856,7 +865,7 @@ diff -urN mod_fastcgi-2.4.2.org/fcgi_protocol.c mod_fastcgi-2.4.2/fcgi_protocol.
                  /* We're gonna consume all thats here */
 diff -urN mod_fastcgi-2.4.2.org/fcgi_util.c mod_fastcgi-2.4.2/fcgi_util.c
 --- mod_fastcgi-2.4.2.org/fcgi_util.c	2004-10-06 20:30:46.339893687 +0200
-+++ mod_fastcgi-2.4.2/fcgi_util.c	2004-10-06 21:47:12.472422351 +0200
++++ mod_fastcgi-2.4.2/fcgi_util.c	2004-10-06 21:48:15.323957883 +0200
 @@ -55,7 +55,7 @@
  fcgi_util_socket_hash_filename(pool *p, const char *path,
          const char *user, const char *group)
@@ -1027,7 +1036,7 @@ diff -urN mod_fastcgi-2.4.2.org/fcgi_util.c mod_fastcgi-2.4.2/fcgi_util.c
  #ifdef WIN32
 diff -urN mod_fastcgi-2.4.2.org/mod_fastcgi.c mod_fastcgi-2.4.2/mod_fastcgi.c
 --- mod_fastcgi-2.4.2.org/mod_fastcgi.c	2004-10-06 20:30:46.355890260 +0200
-+++ mod_fastcgi-2.4.2/mod_fastcgi.c	2004-10-06 21:47:12.486419352 +0200
++++ mod_fastcgi-2.4.2/mod_fastcgi.c	2004-10-06 21:48:15.337954885 +0200
 @@ -267,7 +267,7 @@
  
      /* Register to reset to default values when the config pool is cleaned */
