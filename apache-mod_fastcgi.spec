@@ -12,8 +12,8 @@ License:	distributable
 Group:		Networking/Daemons
 Source0:	http://www.FastCGI.com/dist/mod_%{mod_name}-%{version}.tar.gz
 # Source0-md5:	e994414304b535cb99e10b7d1cad1d1e
-Patch0:		%{name}-allow-uid-gid.patch
-Patch1:		%{name}-apr1.patch
+Patch0:		%{name}-apr1.patch
+Patch1:		%{name}-allow-uid-gid.patch
 Source1:	%{name}.conf
 URL:		http://www.FastCGI.com/
 BuildRequires:	%{apxs}
