@@ -6,7 +6,7 @@ Summary(ru):	FastCGI - более быстрая версия CGI
 Summary(uk):	FastCGI - б╕льш швидка верс╕я CGI
 Name:		apache-mod_fastcgi
 Version:	2.4.2
-Release:	1
+Release:	2
 License:	distributable
 Group:		Networking/Daemons
 Source0:	http://www.FastCGI.com/dist/mod_fastcgi-%{version}.tar.gz
@@ -101,7 +101,7 @@ fi
 %defattr(644,root,root,755)
 %doc docs/LICENSE.TERMS CHANGES
 %doc %{_htmldocdir}/*
-%attr(755,root,root) %{_libexecdir}/*
+%attr(755,root,root) %{_libexecdir}/*.so
 %if ! %{_apache1}
 %config %{_sysconfdir}/httpd/httpd.conf/*.conf
 %endif
