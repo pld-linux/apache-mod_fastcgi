@@ -1,4 +1,5 @@
 %define 	apxs	/usr/sbin/apxs
+%define		_apache1        %(rpm -q apache-devel 2> /dev/null | grep -Eq '\\-2\\.[0-9]+\\.' && echo 0 || echo 1)
 Summary:	Support for the FastCGI protocol for apache webserver
 Summary(pl):	Obs³uga protoko³u FastCGI dla serwera apache
 Summary(ru):	FastCGI - ÂÏÌÅÅ ÂÙÓÔÒÁÑ ×ÅÒÓÉÑ CGI
@@ -51,22 +52,33 @@ FastCGI - ÒÏÚÛÉÒÅÎÎÑ CGI, ÑËÅ ÎÁÄÁ¤ ÍÏÖÌÉ×¦ÓÔØ ÓÔ×ÏÒÀ×ÁÔÉ
 %setup -q -n mod_fastcgi-%{version}
 
 %build
+%if %{_apache1}
+%{apxs} -o mod_fastcgi.so -c *.c
+%else
 %{__make} -f Makefile.AP2 top_dir=%{_libexecdir} INCLUDES="-I%{_includedir}/apache"
+%endif
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{%{_sysconfdir}/httpd/httpd.conf,%{_libexecdir},%{_htmldocdir}}
+install -d $RPM_BUILD_ROOT{%{_libexecdir},%{_htmldocdir}}
 
+%if %{_apache1}
+install mod_fastcgi.so $RPM_BUILD_ROOT%{_libexecdir}
+%else
+install -d $RPM_BUILD_ROOT{%{_sysconfdir}/httpd/httpd.conf
 libtool --mode=install install mod_fastcgi.la $RPM_BUILD_ROOT%{_libexecdir}
+install %{SOURCE1} $RPM_BUILD_ROOT/%{_sysconfdir}/httpd/httpd.conf/
+%endif
 
 install docs/*.html $RPM_BUILD_ROOT%{_htmldocdir}
-
-install %{SOURCE1} $RPM_BUILD_ROOT/%{_sysconfdir}/httpd/httpd.conf/
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %post
+%if %{_apache1}
+%{apxs} -e -a -n %{mod_name} %{_pkglibdir}/mod_%{mod_name}.so 1>&2
+%endif
 if [ -f /var/lock/subsys/httpd ]; then
         /etc/rc.d/init.d/httpd restart 1>&2
 else
@@ -75,6 +87,9 @@ fi
  
 %preun
 if [ "$1" = "0" ]; then
+%if %{_apache1}
+	%{apxs} -e -A -n %{mod_name} %{_pkglibdir}/mod_%{mod_name}.so 1>&2
+%endif
         if [ -f /var/lock/subsys/httpd ]; then
                 /etc/rc.d/init.d/httpd restart 1>&2
         fi
@@ -85,4 +100,6 @@ fi
 %doc docs/LICENSE.TERMS CHANGES
 %doc %{_htmldocdir}/*
 %attr(755,root,root) %{_libexecdir}/*
+%if ! %{_apache1}
 %config %{_sysconfdir}/httpd/httpd.conf/*.conf
+%endif
