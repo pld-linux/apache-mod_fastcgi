@@ -11,6 +11,7 @@ License:	distributable
 Group:		Networking/Daemons
 Source0:	http://www.FastCGI.com/dist/mod_fastcgi-%{version}.tar.gz
 # Source0-md5:	e994414304b535cb99e10b7d1cad1d1e
+Patch0:		%{name}-allow-uid-gid.patch
 Source1:	70_mod_fastcgi.conf
 URL:		http://www.FastCGI.com/
 BuildRequires:	%{apxs}
@@ -50,6 +51,7 @@ FastCGI - розширення CGI, яке нада╓ можлив╕сть створювати
 
 %prep
 %setup -q -n mod_fastcgi-%{version}
+%patch0 -p1
 
 %build
 %if %{_apache1}
@@ -65,7 +67,7 @@ install -d $RPM_BUILD_ROOT{%{_libexecdir},%{_htmldocdir}}
 %if %{_apache1}
 install mod_fastcgi.so $RPM_BUILD_ROOT%{_libexecdir}
 %else
-install -d $RPM_BUILD_ROOT{%{_sysconfdir}/httpd/httpd.conf
+install -d $RPM_BUILD_ROOT%{_sysconfdir}/httpd/httpd.conf
 libtool --mode=install install mod_fastcgi.la $RPM_BUILD_ROOT%{_libexecdir}
 install %{SOURCE1} $RPM_BUILD_ROOT/%{_sysconfdir}/httpd/httpd.conf/
 %endif
