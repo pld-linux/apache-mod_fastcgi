@@ -1,6 +1,18 @@
+diff -urN mod_fastcgi-2.4.2.org/fcgi_config.c mod_fastcgi-2.4.2/fcgi_config.c
+--- mod_fastcgi-2.4.2.org/fcgi_config.c	2004-10-06 20:30:46.336894330 +0200
++++ mod_fastcgi-2.4.2/fcgi_config.c	2004-10-06 20:44:00.576747069 +0200
+@@ -191,7 +191,7 @@
+     const char **header;
+ 
+     if (!*array) {
+-        *array = ap_make_array(p, 10, sizeof(char*));
++        *array = apr_make_array(p, 10, sizeof(char*));
+     }
+ 
+     header = (const char **)ap_push_array(*array);
 diff -urN mod_fastcgi-2.4.2.org/fcgi_protocol.c mod_fastcgi-2.4.2/fcgi_protocol.c
 --- mod_fastcgi-2.4.2.org/fcgi_protocol.c	2004-10-06 20:30:46.338893902 +0200
-+++ mod_fastcgi-2.4.2/fcgi_protocol.c	2004-10-06 20:42:23.772485111 +0200
++++ mod_fastcgi-2.4.2/fcgi_protocol.c	2004-10-06 20:44:00.588744498 +0200
 @@ -178,7 +178,7 @@
          int i = ph->nelts;
  
@@ -12,7 +24,7 @@ diff -urN mod_fastcgi-2.4.2.org/fcgi_protocol.c mod_fastcgi-2.4.2/fcgi_protocol.
              }
 diff -urN mod_fastcgi-2.4.2.org/mod_fastcgi.c mod_fastcgi-2.4.2/mod_fastcgi.c
 --- mod_fastcgi-2.4.2.org/mod_fastcgi.c	2004-10-06 20:30:46.355890260 +0200
-+++ mod_fastcgi-2.4.2/mod_fastcgi.c	2004-10-06 20:40:47.534101928 +0200
++++ mod_fastcgi-2.4.2/mod_fastcgi.c	2004-10-06 20:44:00.605740857 +0200
 @@ -267,7 +267,7 @@
  
      /* Register to reset to default values when the config pool is cleaned */
@@ -40,6 +52,15 @@ diff -urN mod_fastcgi-2.4.2.org/mod_fastcgi.c mod_fastcgi-2.4.2/mod_fastcgi.c
      ap_unblock_alarms();
  
  #ifdef WIN32
+@@ -2476,7 +2476,7 @@
+     fr->erBufPtr = fcgi_buf_new(p, sizeof(FCGI_EndRequestBody) + 1);
+     fr->gotHeader = FALSE;
+     fr->parseHeader = SCAN_CGI_READING_HEADERS;
+-    fr->header = ap_make_array(p, 1, 1);
++    fr->header = apr_make_array(p, 1, 1);
+     fr->fs_stderr = NULL;
+     fr->r = r;
+     fr->readingEndRequestBody = FALSE;
 @@ -2531,7 +2531,7 @@
   */
  static int apache_is_scriptaliased(request_rec *r)
