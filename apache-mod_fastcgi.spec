@@ -1,7 +1,7 @@
 Summary:	Support for the FastCGI protocol for apache webserver
 Name:		apache-mod_fastcgi
-Version:	2.2.8
-Release:	2
+Version:	2.2.10
+Release:	1
 Copyright:	Open Market
 Group:		Networking/Daemons
 Group(de):	Netzwerkwesen/Server
