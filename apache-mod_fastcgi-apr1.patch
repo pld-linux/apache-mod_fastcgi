@@ -1,3 +1,15 @@
+diff -urN mod_fastcgi-2.4.2.org/fcgi_protocol.c mod_fastcgi-2.4.2/fcgi_protocol.c
+--- mod_fastcgi-2.4.2.org/fcgi_protocol.c	2004-10-06 20:30:46.338893902 +0200
++++ mod_fastcgi-2.4.2/fcgi_protocol.c	2004-10-06 20:42:23.772485111 +0200
+@@ -178,7 +178,7 @@
+         int i = ph->nelts;
+ 
+         for ( ; i; --i, ++elt) {
+-            const char *val = ap_table_get(fr->r->headers_in, *elt);
++            const char *val = apr_table_get(fr->r->headers_in, *elt);
+             if (val) {
+                 ap_table_setn(fr->r->subprocess_env, *elt, val);
+             }
 diff -urN mod_fastcgi-2.4.2.org/mod_fastcgi.c mod_fastcgi-2.4.2/mod_fastcgi.c
 --- mod_fastcgi-2.4.2.org/mod_fastcgi.c	2004-10-06 20:30:46.355890260 +0200
 +++ mod_fastcgi-2.4.2/mod_fastcgi.c	2004-10-06 20:40:47.534101928 +0200
