@@ -4,11 +4,11 @@ Summary(pl):	ObsЁuga protokoЁu FastCGI dla serwera apache
 Summary(ru):	FastCGI - более быстрая версия CGI
 Summary(uk):	FastCGI - б╕льш швидка верс╕я CGI
 Name:		apache-mod_fastcgi
-Version:	2.2.10
-Release:	6
+Version:	2.2.12
+Release:	0.1
 License:	Open Market
 Group:		Networking/Daemons
-Source0:	http://www.FastCGI.com/dist/mod_fastcgi_%{version}.tar.gz
+Source0:	http://www.FastCGI.com/dist/mod_fastcgi-%{version}.tar.gz
 URL:		http://www.FastCGI.com/
 BuildRequires:	apache-devel
 BuildRequires:	%{apxs}
@@ -45,7 +45,7 @@ FastCGI - розширення CGI, яке нада╓ можлив╕сть створювати
 Швидк╕сть API web-сервер╕в з╕ вс╕ма перевагами CGI.
 
 %prep
-%setup -q -n mod_fastcgi_%{version}
+%setup -q -n mod_fastcgi-%{version}
 
 %build
 %{apxs} -D SUEXEC_BIN="\"\\\"%{_sbindir}/suexec\\\"\"" -o mod_fastcgi.so -c *.c
