@@ -55,15 +55,6 @@ diff -urN mod_fastcgi-2.4.2.org/fcgi_config.c mod_fastcgi-2.4.2/fcgi_config.c
      }
      else {
          *(envp + *envc) = var;
-@@ -191,7 +191,7 @@
-     const char **header;
- 
-     if (!*array) {
--        *array = ap_make_array(p, 10, sizeof(char*));
-+        *array = apr_make_array(p, 10, sizeof(char*));
-     }
- 
-     header = (const char **)ap_push_array(*array);
 @@ -379,7 +379,7 @@
      const char *err;
      pool *tp;
@@ -370,15 +361,6 @@ diff -urN mod_fastcgi-2.4.2.org/mod_fastcgi.c mod_fastcgi-2.4.2/mod_fastcgi.c
              
              if (stat(fs_path, my_finfo) < 0) 
              {
-@@ -2476,7 +2476,7 @@
-     fr->erBufPtr = fcgi_buf_new(p, sizeof(FCGI_EndRequestBody) + 1);
-     fr->gotHeader = FALSE;
-     fr->parseHeader = SCAN_CGI_READING_HEADERS;
--    fr->header = ap_make_array(p, 1, 1);
-+    fr->header = apr_make_array(p, 1, 1);
-     fr->fs_stderr = NULL;
-     fr->r = r;
-     fr->readingEndRequestBody = FALSE;
 @@ -2531,7 +2531,7 @@
   */
  static int apache_is_scriptaliased(request_rec *r)
