@@ -4,7 +4,7 @@ Summary(ru):	FastCGI - более быстрая версия CGI
 Summary(uk):	FastCGI - б╕льш швидка верс╕я CGI
 Name:		apache-mod_fastcgi
 Version:	2.2.10
-Release:	3
+Release:	4
 License:	Open Market
 Group:		Networking/Daemons
 Group(cs):	SМ╩ovИ/DИmoni
