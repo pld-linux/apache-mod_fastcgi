@@ -1,6 +1,6 @@
 diff -urN mod_fastcgi-2.4.2.org/fcgi_config.c mod_fastcgi-2.4.2/fcgi_config.c
 --- mod_fastcgi-2.4.2.org/fcgi_config.c	2004-10-06 20:30:46.336894330 +0200
-+++ mod_fastcgi-2.4.2/fcgi_config.c	2004-10-06 20:50:22.016032647 +0200
++++ mod_fastcgi-2.4.2/fcgi_config.c	2004-10-06 20:51:28.494791133 +0200
 @@ -50,7 +50,7 @@
      /* Convert port number */
      tmp = (u_short) strtol(portStr, &cvptr, 10);
@@ -118,7 +118,7 @@ diff -urN mod_fastcgi-2.4.2.org/fcgi_config.c mod_fastcgi-2.4.2/fcgi_config.c
  #ifdef APACHE2
 diff -urN mod_fastcgi-2.4.2.org/fcgi_pm.c mod_fastcgi-2.4.2/fcgi_pm.c
 --- mod_fastcgi-2.4.2.org/fcgi_pm.c	2004-10-06 20:30:46.337894116 +0200
-+++ mod_fastcgi-2.4.2/fcgi_pm.c	2004-10-06 20:50:22.027030291 +0200
++++ mod_fastcgi-2.4.2/fcgi_pm.c	2004-10-06 20:51:28.505788777 +0200
 @@ -576,7 +576,7 @@
          fs->envp[i - 1] = NULL;
      }
@@ -178,8 +178,8 @@ diff -urN mod_fastcgi-2.4.2.org/fcgi_pm.c mod_fastcgi-2.4.2/fcgi_pm.c
  /*
 diff -urN mod_fastcgi-2.4.2.org/fcgi_protocol.c mod_fastcgi-2.4.2/fcgi_protocol.c
 --- mod_fastcgi-2.4.2.org/fcgi_protocol.c	2004-10-06 20:30:46.338893902 +0200
-+++ mod_fastcgi-2.4.2/fcgi_protocol.c	2004-10-06 20:50:22.029029863 +0200
-@@ -135,11 +135,11 @@
++++ mod_fastcgi-2.4.2/fcgi_protocol.c	2004-10-06 20:51:28.507788348 +0200
+@@ -135,18 +135,18 @@
  {
      table *e = r->subprocess_env;
  
@@ -196,6 +196,14 @@ diff -urN mod_fastcgi-2.4.2.org/fcgi_protocol.c mod_fastcgi-2.4.2/fcgi_protocol.
  
      /* The FastCGI spec precludes sending of CONTENT_LENGTH, PATH_INFO,
       * PATH_TRANSLATED, and SCRIPT_NAME (for some reason?).  PATH_TRANSLATED we
+      * don't have, its the variable that causes Apache to break trying to set
+      * up (and thus the reason this fn exists vs. using ap_add_cgi_vars()). */
+     if (compat) {
+-        ap_table_unset(e, "CONTENT_LENGTH");
++        apr_table_unset(e, "CONTENT_LENGTH");
+         return;
+     }
+ 
 @@ -155,17 +155,17 @@
       * args and path_info of the original request, and not any that may have
       * come with the script URI in the include command.  Ugh. */
@@ -242,7 +250,7 @@ diff -urN mod_fastcgi-2.4.2.org/fcgi_protocol.c mod_fastcgi-2.4.2/fcgi_protocol.
                  /* We're gonna consume all thats here */
 diff -urN mod_fastcgi-2.4.2.org/fcgi_util.c mod_fastcgi-2.4.2/fcgi_util.c
 --- mod_fastcgi-2.4.2.org/fcgi_util.c	2004-10-06 20:30:46.339893687 +0200
-+++ mod_fastcgi-2.4.2/fcgi_util.c	2004-10-06 20:50:22.034028792 +0200
++++ mod_fastcgi-2.4.2/fcgi_util.c	2004-10-06 20:51:28.511787491 +0200
 @@ -55,7 +55,7 @@
  fcgi_util_socket_hash_filename(pool *p, const char *path,
          const char *user, const char *group)
@@ -298,7 +306,7 @@ diff -urN mod_fastcgi-2.4.2.org/fcgi_util.c mod_fastcgi-2.4.2/fcgi_util.c
      }
 diff -urN mod_fastcgi-2.4.2.org/mod_fastcgi.c mod_fastcgi-2.4.2/mod_fastcgi.c
 --- mod_fastcgi-2.4.2.org/mod_fastcgi.c	2004-10-06 20:30:46.355890260 +0200
-+++ mod_fastcgi-2.4.2/mod_fastcgi.c	2004-10-06 20:50:22.048025794 +0200
++++ mod_fastcgi-2.4.2/mod_fastcgi.c	2004-10-06 20:51:28.526784279 +0200
 @@ -267,7 +267,7 @@
  
      /* Register to reset to default values when the config pool is cleaned */
@@ -362,9 +370,12 @@ diff -urN mod_fastcgi-2.4.2.org/mod_fastcgi.c mod_fastcgi-2.4.2/mod_fastcgi.c
      return t && (!strcasecmp(t, "cgi-script"));
  }
  
-@@ -2556,7 +2556,7 @@
+@@ -2554,9 +2554,9 @@
+              */
+             r->method = "GET";
              r->method_number = M_GET;
-             ap_table_unset(r->headers_in, "Content-length");
+-            ap_table_unset(r->headers_in, "Content-length");
++            apr_table_unset(r->headers_in, "Content-length");
  
 -            ap_internal_redirect_handler(ap_table_get(r->headers_out, "Location"), r);
 +            ap_internal_redirect_handler(apr_table_get(r->headers_out, "Location"), r);
