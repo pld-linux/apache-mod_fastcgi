@@ -1,7 +1,7 @@
 Summary:	Support for the FastCGI protocol for apache webserver
 Name:		apache-mod_fastcgi
 Version:	2.2.10
-Release:	1
+Release:	2
 Copyright:	Open Market
 Group:		Networking/Daemons
 Group(de):	Netzwerkwesen/Server
@@ -13,7 +13,7 @@ Requires:	apache >= 1.3.1
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define         _libexecdir     %{_libdir}/apache
-%define         _htmldocdir     /home/httpd/html/docs/%{name}_%{version}
+%define         _htmldocdir     /home/httpd/manual/mod
 
 %description
 This 3rd party module provides support for the FastCGI protocol.
