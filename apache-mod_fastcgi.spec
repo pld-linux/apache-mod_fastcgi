@@ -13,6 +13,7 @@ Group:		Networking/Daemons
 Source0:	http://www.FastCGI.com/dist/mod_%{mod_name}-%{version}.tar.gz
 # Source0-md5:	e994414304b535cb99e10b7d1cad1d1e
 Patch0:		%{name}-allow-uid-gid.patch
+Patch1:		%{name}-apr1.patch
 Source1:	%{name}.conf
 URL:		http://www.FastCGI.com/
 BuildRequires:	%{apxs}
@@ -53,6 +54,7 @@ FastCGI - розширення CGI, яке нада╓ можлив╕сть створювати
 %prep
 %setup -q -n mod_%{mod_name}-%{version}
 %patch0 -p1
+%patch1 -p1
 
 %build
 %{__make} -f Makefile.AP2 \
