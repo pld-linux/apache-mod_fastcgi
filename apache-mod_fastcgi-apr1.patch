@@ -1,6 +1,6 @@
 diff -urN mod_fastcgi-2.4.2.org/mod_fastcgi.c mod_fastcgi-2.4.2/mod_fastcgi.c
 --- mod_fastcgi-2.4.2.org/mod_fastcgi.c	2004-10-06 20:30:46.355890260 +0200
-+++ mod_fastcgi-2.4.2/mod_fastcgi.c	2004-10-06 20:35:44.632991387 +0200
++++ mod_fastcgi-2.4.2/mod_fastcgi.c	2004-10-06 20:38:52.593725208 +0200
 @@ -267,7 +267,7 @@
  
      /* Register to reset to default values when the config pool is cleaned */
@@ -19,3 +19,23 @@ diff -urN mod_fastcgi-2.4.2.org/mod_fastcgi.c mod_fastcgi-2.4.2/mod_fastcgi.c
      ap_unblock_alarms();
  
  #ifdef WIN32
+@@ -2639,16 +2639,16 @@
+ 
+     if (passed) {
+         if (fr->auth_compat) {
+-            ap_table_do((int (*)(void *, const char *, const char *))post_process_auth_passed_compat_header,
++            apr_table_do((int (*)(void *, const char *, const char *))post_process_auth_passed_compat_header,
+                  (void *)r->subprocess_env, fr->authHeaders, NULL);
+         }
+         else {
+-            ap_table_do((int (*)(void *, const char *, const char *))post_process_auth_passed_header,
++            apr_table_do((int (*)(void *, const char *, const char *))post_process_auth_passed_header,
+                  (void *)r->subprocess_env, fr->authHeaders, NULL);
+         }
+     }
+     else {
+-        ap_table_do((int (*)(void *, const char *, const char *))post_process_auth_failed_header,
++        apr_table_do((int (*)(void *, const char *, const char *))post_process_auth_failed_header,
+              (void *)r->err_headers_out, fr->authHeaders, NULL);
+     }
+ 
