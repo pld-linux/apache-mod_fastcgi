@@ -5,6 +5,7 @@ Summary(pl):	ObsЁuga protokoЁu FastCGI dla serwera apache
 Summary(ru):	FastCGI - более быстрая версия CGI
 Summary(uk):	FastCGI - б╕льш швидка верс╕я CGI
 Name:		apache-mod_%{mod_name}
+# NOTE: remember about apache1-mod_fastcgi.spec when messing here
 Version:	2.4.2
 Release:	3
 License:	distributable
