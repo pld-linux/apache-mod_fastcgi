@@ -1,6 +1,6 @@
 diff -urN mod_fastcgi-2.4.2.org/fcgi_config.c mod_fastcgi-2.4.2/fcgi_config.c
 --- mod_fastcgi-2.4.2.org/fcgi_config.c	2004-10-06 20:30:46.336894330 +0200
-+++ mod_fastcgi-2.4.2/fcgi_config.c	2004-10-06 20:44:00.576747069 +0200
++++ mod_fastcgi-2.4.2/fcgi_config.c	2004-10-06 20:45:23.618957223 +0200
 @@ -191,7 +191,7 @@
      const char **header;
  
@@ -12,7 +12,7 @@ diff -urN mod_fastcgi-2.4.2.org/fcgi_config.c mod_fastcgi-2.4.2/fcgi_config.c
      header = (const char **)ap_push_array(*array);
 diff -urN mod_fastcgi-2.4.2.org/fcgi_protocol.c mod_fastcgi-2.4.2/fcgi_protocol.c
 --- mod_fastcgi-2.4.2.org/fcgi_protocol.c	2004-10-06 20:30:46.338893902 +0200
-+++ mod_fastcgi-2.4.2/fcgi_protocol.c	2004-10-06 20:44:00.588744498 +0200
++++ mod_fastcgi-2.4.2/fcgi_protocol.c	2004-10-06 20:45:23.631954438 +0200
 @@ -178,7 +178,7 @@
          int i = ph->nelts;
  
@@ -22,9 +22,30 @@ diff -urN mod_fastcgi-2.4.2.org/fcgi_protocol.c mod_fastcgi-2.4.2/fcgi_protocol.
              if (val) {
                  ap_table_setn(fr->r->subprocess_env, *elt, val);
              }
+@@ -373,7 +373,7 @@
+ 
+                 if (fr->fs_stderr == NULL)
+                 {
+-                    fr->fs_stderr = ap_palloc(p, FCGI_SERVER_MAX_STDERR_LINE_LEN + 1);
++                    fr->fs_stderr = apr_palloc(p, FCGI_SERVER_MAX_STDERR_LINE_LEN + 1);
+                 }
+ 
+                 /* We're gonna consume all thats here */
+diff -urN mod_fastcgi-2.4.2.org/fcgi_util.c mod_fastcgi-2.4.2/fcgi_util.c
+--- mod_fastcgi-2.4.2.org/fcgi_util.c	2004-10-06 20:30:46.339893687 +0200
++++ mod_fastcgi-2.4.2/fcgi_util.c	2004-10-06 20:45:23.635953582 +0200
+@@ -367,7 +367,7 @@
+     const char *err;
+ 
+     if (finfo == NULL) {
+-        finfo = (struct stat *)ap_palloc(p, sizeof(struct stat));	        
++        finfo = (struct stat *)apr_palloc(p, sizeof(struct stat));	        
+         if (stat(fs_path, finfo) < 0)
+             return ap_psprintf(p, "stat(%s) failed: %s", fs_path, strerror(errno));
+     }
 diff -urN mod_fastcgi-2.4.2.org/mod_fastcgi.c mod_fastcgi-2.4.2/mod_fastcgi.c
 --- mod_fastcgi-2.4.2.org/mod_fastcgi.c	2004-10-06 20:30:46.355890260 +0200
-+++ mod_fastcgi-2.4.2/mod_fastcgi.c	2004-10-06 20:44:00.605740857 +0200
++++ mod_fastcgi-2.4.2/mod_fastcgi.c	2004-10-06 20:45:23.649950583 +0200
 @@ -267,7 +267,7 @@
  
      /* Register to reset to default values when the config pool is cleaned */
@@ -52,6 +73,15 @@ diff -urN mod_fastcgi-2.4.2.org/mod_fastcgi.c mod_fastcgi-2.4.2/mod_fastcgi.c
      ap_unblock_alarms();
  
  #ifdef WIN32
+@@ -2450,7 +2450,7 @@
+         else
+ #endif
+         {
+-            my_finfo = (struct stat *) ap_palloc(p, sizeof(struct stat));
++            my_finfo = (struct stat *) apr_palloc(p, sizeof(struct stat));
+             
+             if (stat(fs_path, my_finfo) < 0) 
+             {
 @@ -2476,7 +2476,7 @@
      fr->erBufPtr = fcgi_buf_new(p, sizeof(FCGI_EndRequestBody) + 1);
      fr->gotHeader = FALSE;
