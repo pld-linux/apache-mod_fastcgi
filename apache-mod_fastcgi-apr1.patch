@@ -1,6 +1,6 @@
 diff -urN mod_fastcgi-2.4.2.org/fcgi_config.c mod_fastcgi-2.4.2/fcgi_config.c
 --- mod_fastcgi-2.4.2.org/fcgi_config.c	2004-10-06 20:30:46.336894330 +0200
-+++ mod_fastcgi-2.4.2/fcgi_config.c	2004-10-06 20:46:31.353446697 +0200
++++ mod_fastcgi-2.4.2/fcgi_config.c	2004-10-06 20:47:33.355164283 +0200
 @@ -191,7 +191,7 @@
      const char **header;
  
@@ -30,7 +30,7 @@ diff -urN mod_fastcgi-2.4.2.org/fcgi_config.c mod_fastcgi-2.4.2/fcgi_config.c
  }
 diff -urN mod_fastcgi-2.4.2.org/fcgi_pm.c mod_fastcgi-2.4.2/fcgi_pm.c
 --- mod_fastcgi-2.4.2.org/fcgi_pm.c	2004-10-06 20:30:46.337894116 +0200
-+++ mod_fastcgi-2.4.2/fcgi_pm.c	2004-10-06 20:46:31.364444341 +0200
++++ mod_fastcgi-2.4.2/fcgi_pm.c	2004-10-06 20:47:33.365162141 +0200
 @@ -576,7 +576,7 @@
          fs->envp[i - 1] = NULL;
      }
@@ -78,7 +78,7 @@ diff -urN mod_fastcgi-2.4.2.org/fcgi_pm.c mod_fastcgi-2.4.2/fcgi_pm.c
  /*
 diff -urN mod_fastcgi-2.4.2.org/fcgi_protocol.c mod_fastcgi-2.4.2/fcgi_protocol.c
 --- mod_fastcgi-2.4.2.org/fcgi_protocol.c	2004-10-06 20:30:46.338893902 +0200
-+++ mod_fastcgi-2.4.2/fcgi_protocol.c	2004-10-06 20:46:31.367443698 +0200
++++ mod_fastcgi-2.4.2/fcgi_protocol.c	2004-10-06 20:47:33.368161499 +0200
 @@ -178,7 +178,7 @@
          int i = ph->nelts;
  
@@ -99,7 +99,7 @@ diff -urN mod_fastcgi-2.4.2.org/fcgi_protocol.c mod_fastcgi-2.4.2/fcgi_protocol.
                  /* We're gonna consume all thats here */
 diff -urN mod_fastcgi-2.4.2.org/fcgi_util.c mod_fastcgi-2.4.2/fcgi_util.c
 --- mod_fastcgi-2.4.2.org/fcgi_util.c	2004-10-06 20:30:46.339893687 +0200
-+++ mod_fastcgi-2.4.2/fcgi_util.c	2004-10-06 20:46:31.371442842 +0200
++++ mod_fastcgi-2.4.2/fcgi_util.c	2004-10-06 20:47:33.372160642 +0200
 @@ -367,7 +367,7 @@
      const char *err;
  
@@ -111,7 +111,7 @@ diff -urN mod_fastcgi-2.4.2.org/fcgi_util.c mod_fastcgi-2.4.2/fcgi_util.c
      }
 diff -urN mod_fastcgi-2.4.2.org/mod_fastcgi.c mod_fastcgi-2.4.2/mod_fastcgi.c
 --- mod_fastcgi-2.4.2.org/mod_fastcgi.c	2004-10-06 20:30:46.355890260 +0200
-+++ mod_fastcgi-2.4.2/mod_fastcgi.c	2004-10-06 20:46:31.385439843 +0200
++++ mod_fastcgi-2.4.2/mod_fastcgi.c	2004-10-06 20:47:33.386157643 +0200
 @@ -267,7 +267,7 @@
  
      /* Register to reset to default values when the config pool is cleaned */
