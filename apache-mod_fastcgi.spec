@@ -1,0 +1,50 @@
+Summary:	Support for the FastCGI protocol for apache webserver
+Name:		apache-mod_fastcgi
+Version:	2.2.8
+Release:	1
+Copyright:	Open Market
+Group:		Networking/Daemons
+Group(de):	Netzwerkwesen/Server
+Group(pl):	Sieciowe/Serwery
+URL:		http://www.FastCGI.com/
+Source0:	http://www.FastCGI.com/dist/mod_fastcgi_%{version}.tar.gz
+Requires:	apache >= 1.3.1
+BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
+BuildRequires:	apache-devel
+
+%description
+This 3rd party module provides support for the FastCGI protocol.
+FastCGI is a language independent, scalable, open extension to CGI
+that provides high performance and persistence without the limitations
+of server specific APIs.
+
+%define         _libexecdir     /usr/lib/apache
+%define         _htmldocdir     /home/httpd/html/docs/%{name}_%{version}
+
+%prep
+%setup -q -n mod_fastcgi_%{version}
+
+%build
+apxs -o mod_fastcgi.so -c *.c
+strip mod_fastcgi.so
+
+%install
+rm -rf $RPM_BUILD_ROOT
+install -d $RPM_BUILD_ROOT{%{_libexecdir},%{_htmldocdir}}
+
+install mod_fastcgi.so $RPM_BUILD_ROOT%{_libexecdir}
+
+install docs/*.html $RPM_BUILD_ROOT%{_htmldocdir}
+
+gzip -9nf docs/LICENSE.TERMS CHANGES
+
+strip --strip-unneeded $RPM_BUILD_ROOT%{_libexecdir}/*
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%files
+%defattr(644,root,root,755)
+%doc docs/*.gz CHANGES.gz
+%doc %{_htmldocdir}
+%attr(755,root,root) %{_libexecdir}/*
