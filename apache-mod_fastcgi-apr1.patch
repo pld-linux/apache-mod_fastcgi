@@ -1,6 +1,6 @@
 diff -urN mod_fastcgi-2.4.2.org/fcgi_buf.c mod_fastcgi-2.4.2/fcgi_buf.c
 --- mod_fastcgi-2.4.2.org/fcgi_buf.c	2004-10-06 20:30:46.335894544 +0200
-+++ mod_fastcgi-2.4.2/fcgi_buf.c	2004-10-06 21:41:40.189606151 +0200
++++ mod_fastcgi-2.4.2/fcgi_buf.c	2004-10-06 21:43:03.369786748 +0200
 @@ -50,7 +50,7 @@
  {
      Buffer *buf;
@@ -21,7 +21,7 @@ diff -urN mod_fastcgi-2.4.2.org/fcgi_buf.c mod_fastcgi-2.4.2/fcgi_buf.c
          arr->elts = new_elts;
 diff -urN mod_fastcgi-2.4.2.org/fcgi_config.c mod_fastcgi-2.4.2/fcgi_config.c
 --- mod_fastcgi-2.4.2.org/fcgi_config.c	2004-10-06 20:30:46.336894330 +0200
-+++ mod_fastcgi-2.4.2/fcgi_config.c	2004-10-06 21:41:40.194605080 +0200
++++ mod_fastcgi-2.4.2/fcgi_config.c	2004-10-06 21:43:03.374785677 +0200
 @@ -50,7 +50,7 @@
      /* Convert port number */
      tmp = (u_short) strtol(portStr, &cvptr, 10);
@@ -156,7 +156,7 @@ diff -urN mod_fastcgi-2.4.2.org/fcgi_config.c mod_fastcgi-2.4.2/fcgi_config.c
          if (dp == NULL) {
 -            ap_destroy_pool(tp);
 -            return ap_psprintf(p, "can't open dynamic directory \"%s\": %s",
-+            apr_destroy_pool(tp);
++            apr_pool_destroy(tp);
 +            return apr_psprintf(p, "can't open dynamic directory \"%s\": %s",
                  fcgi_dynamic_dir, strerror(errno));
          }
@@ -173,7 +173,7 @@ diff -urN mod_fastcgi-2.4.2.org/fcgi_config.c mod_fastcgi-2.4.2/fcgi_config.c
  #endif /* !APACHE2 */
  
 -    ap_destroy_pool(tp);
-+    apr_destroy_pool(tp);
++    apr_pool_destroy(tp);
  
      return NULL;
  }
@@ -614,7 +614,7 @@ diff -urN mod_fastcgi-2.4.2.org/fcgi_config.c mod_fastcgi-2.4.2/fcgi_config.c
          case FCGI_AUTH_TYPE_AUTHENTICATOR:
 diff -urN mod_fastcgi-2.4.2.org/fcgi_pm.c mod_fastcgi-2.4.2/fcgi_pm.c
 --- mod_fastcgi-2.4.2.org/fcgi_pm.c	2004-10-06 20:30:46.337894116 +0200
-+++ mod_fastcgi-2.4.2/fcgi_pm.c	2004-10-06 21:41:40.204602938 +0200
++++ mod_fastcgi-2.4.2/fcgi_pm.c	2004-10-06 21:43:03.385783321 +0200
 @@ -365,7 +365,7 @@
      if (dnEnd == NULL) {
          dirName = "./";
@@ -638,7 +638,7 @@ diff -urN mod_fastcgi-2.4.2.org/fcgi_pm.c mod_fastcgi-2.4.2/fcgi_pm.c
      }
  
 -    ap_destroy_pool(tp);
-+    apr_destroy_pool(tp);
++    apr_pool_destroy(tp);
  
      return proc.pid;
  
@@ -656,7 +656,7 @@ diff -urN mod_fastcgi-2.4.2.org/fcgi_pm.c mod_fastcgi-2.4.2/fcgi_pm.c
              "\"#!\" as their first line", 
              fs->fs_path);
 -        ap_destroy_pool(tp);
-+        apr_destroy_pool(tp);
++        apr_pool_destroy(tp);
          goto CLEANUP;
      }
  
@@ -686,7 +686,7 @@ diff -urN mod_fastcgi-2.4.2.org/fcgi_pm.c mod_fastcgi-2.4.2/fcgi_pm.c
      }
  
 -    ap_destroy_pool(tp);
-+    apr_destroy_pool(tp);
++    apr_pool_destroy(tp);
  
      return pid;
  
@@ -747,7 +747,7 @@ diff -urN mod_fastcgi-2.4.2.org/fcgi_pm.c mod_fastcgi-2.4.2/fcgi_pm.c
  
  BagNewServer:
 -        if (sp) ap_destroy_pool(sp);
-+        if (sp) apr_destroy_pool(sp);
++        if (sp) apr_pool_destroy(sp);
  
  #ifdef WIN32
      free(cjob->fs_path);
@@ -756,13 +756,13 @@ diff -urN mod_fastcgi-2.4.2.org/fcgi_pm.c mod_fastcgi-2.4.2/fcgi_pm.c
  #endif
  
 -    ap_destroy_pool(tp);
-+    apr_destroy_pool(tp);
++    apr_pool_destroy(tp);
  }
  
  /*
 diff -urN mod_fastcgi-2.4.2.org/fcgi_protocol.c mod_fastcgi-2.4.2/fcgi_protocol.c
 --- mod_fastcgi-2.4.2.org/fcgi_protocol.c	2004-10-06 20:30:46.338893902 +0200
-+++ mod_fastcgi-2.4.2/fcgi_protocol.c	2004-10-06 21:41:40.207602296 +0200
++++ mod_fastcgi-2.4.2/fcgi_protocol.c	2004-10-06 21:43:03.388782679 +0200
 @@ -110,7 +110,7 @@
      char *first, *last;
  
@@ -843,7 +843,7 @@ diff -urN mod_fastcgi-2.4.2.org/fcgi_protocol.c mod_fastcgi-2.4.2/fcgi_protocol.
                  /* We're gonna consume all thats here */
 diff -urN mod_fastcgi-2.4.2.org/fcgi_util.c mod_fastcgi-2.4.2/fcgi_util.c
 --- mod_fastcgi-2.4.2.org/fcgi_util.c	2004-10-06 20:30:46.339893687 +0200
-+++ mod_fastcgi-2.4.2/fcgi_util.c	2004-10-06 21:41:40.211601439 +0200
++++ mod_fastcgi-2.4.2/fcgi_util.c	2004-10-06 21:43:03.392781822 +0200
 @@ -55,7 +55,7 @@
  fcgi_util_socket_hash_filename(pool *p, const char *path,
          const char *user, const char *group)
@@ -1014,7 +1014,7 @@ diff -urN mod_fastcgi-2.4.2.org/fcgi_util.c mod_fastcgi-2.4.2/fcgi_util.c
  #ifdef WIN32
 diff -urN mod_fastcgi-2.4.2.org/mod_fastcgi.c mod_fastcgi-2.4.2/mod_fastcgi.c
 --- mod_fastcgi-2.4.2.org/mod_fastcgi.c	2004-10-06 20:30:46.355890260 +0200
-+++ mod_fastcgi-2.4.2/mod_fastcgi.c	2004-10-06 21:41:40.225598440 +0200
++++ mod_fastcgi-2.4.2/mod_fastcgi.c	2004-10-06 21:43:03.406778823 +0200
 @@ -267,7 +267,7 @@
  
      /* Register to reset to default values when the config pool is cleaned */
