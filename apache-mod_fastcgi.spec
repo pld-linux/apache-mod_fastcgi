@@ -1,4 +1,5 @@
 Summary:	Support for the FastCGI protocol for apache webserver
+Summary(pl):	Obs³uga protoko³u FastCGI dla serwera apache
 Name:		apache-mod_fastcgi
 Version:	2.2.10
 Release:	2
@@ -20,6 +21,11 @@ This 3rd party module provides support for the FastCGI protocol.
 FastCGI is a language independent, scalable, open extension to CGI
 that provides high performance and persistence without the limitations
 of server specific APIs.
+
+%description -l pl
+To jest modu³ apache dodaj±cy obs³ugê protoko³u FastCGI. FastCGI jest
+niezale¿nym od jêzyka, skalowalnym, otwartym rozszerzeniem CGI daj±cym
+du¿± wydajno¶æ bez ograniczania API specificznego dla serwera.
 
 %prep
 %setup -q -n mod_fastcgi_%{version}
