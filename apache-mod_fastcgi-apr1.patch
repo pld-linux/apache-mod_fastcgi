@@ -1,6 +1,60 @@
 diff -urN mod_fastcgi-2.4.2.org/fcgi_config.c mod_fastcgi-2.4.2/fcgi_config.c
 --- mod_fastcgi-2.4.2.org/fcgi_config.c	2004-10-06 20:30:46.336894330 +0200
-+++ mod_fastcgi-2.4.2/fcgi_config.c	2004-10-06 20:49:14.557484059 +0200
++++ mod_fastcgi-2.4.2/fcgi_config.c	2004-10-06 20:50:22.016032647 +0200
+@@ -50,7 +50,7 @@
+     /* Convert port number */
+     tmp = (u_short) strtol(portStr, &cvptr, 10);
+     if (*cvptr != '\0' || tmp < 1 || tmp > USHRT_MAX)
+-        return ap_pstrcat(p, "bad port number \"", portStr, "\"", NULL);
++        return apr_pstrcat(p, "bad port number \"", portStr, "\"", NULL);
+ 
+     *port = (unsigned short) tmp;
+ 
+@@ -75,7 +75,7 @@
+     tmp = strtol(txt, &ptr, 10);
+ 
+     if (*ptr != '\0') {
+-        return ap_pstrcat(p, "\"", txt, "\" must be a positive integer", NULL);
++        return apr_pstrcat(p, "\"", txt, "\" must be a positive integer", NULL);
+ 	}
+     
+ 	if (tmp < min || tmp > USHRT_MAX) {
+@@ -101,7 +101,7 @@
+ 
+     if (*cp != '\0')
+     {
+-        return ap_pstrcat(p, "can't parse ", "\"", val, "\"", NULL);
++        return apr_pstrcat(p, "can't parse ", "\"", val, "\"", NULL);
+     }
+     else if (*num < min)
+     {
+@@ -126,7 +126,7 @@
+     *num = (u_int)strtol(val, &ptr, 10);
+ 
+     if (*ptr != '\0')
+-        return ap_pstrcat(p, "\"", val, "\" must be a positive integer", NULL);
++        return apr_pstrcat(p, "\"", val, "\" must be a positive integer", NULL);
+     else if (*num < min)
+         return ap_psprintf(p, "\"%u\" must be >= %u", *num, min);
+     return NULL;
+@@ -147,7 +147,7 @@
+     *num = (float) strtod(val, &ptr);
+ 
+     if (*ptr != '\0')
+-        return ap_pstrcat(p, "\"", val, "\" is not a floating point number", NULL);
++        return apr_pstrcat(p, "\"", val, "\" is not a floating point number", NULL);
+     if (*num < min || *num > max)
+         return ap_psprintf(p, "\"%f\" is not between %f and %f", *num, min, max);
+     return NULL;
+@@ -160,7 +160,7 @@
+     }
+ 
+     if (strchr(var, '=') == NULL) {
+-        *(envp + *envc) = ap_pstrcat(p, var, "=", getenv(var), NULL);
++        *(envp + *envc) = apr_pstrcat(p, var, "=", getenv(var), NULL);
+     }
+     else {
+         *(envp + *envc) = var;
 @@ -191,7 +191,7 @@
      const char **header;
  
@@ -10,6 +64,15 @@ diff -urN mod_fastcgi-2.4.2.org/fcgi_config.c mod_fastcgi-2.4.2/fcgi_config.c
      }
  
      header = (const char **)ap_push_array(*array);
+@@ -379,7 +379,7 @@
+     const char *err;
+     pool *tp;
+ 
+-    fcgi_dynamic_dir = ap_pstrcat(p, fcgi_socket_dir, "/dynamic", NULL);
++    fcgi_dynamic_dir = apr_pstrcat(p, fcgi_socket_dir, "/dynamic", NULL);
+ 
+     if ((err = fcgi_config_make_dir(p, fcgi_dynamic_dir)))
+         return ap_psprintf(p, "can't create dynamic directory \"%s\": %s", fcgi_dynamic_dir, err);
 @@ -419,7 +419,7 @@
  
          dp = ap_popendir(tp, fcgi_dynamic_dir);
@@ -19,7 +82,14 @@ diff -urN mod_fastcgi-2.4.2.org/fcgi_config.c mod_fastcgi-2.4.2/fcgi_config.c
              return ap_psprintf(p, "can't open dynamic directory \"%s\": %s",
                  fcgi_dynamic_dir, strerror(errno));
          }
-@@ -437,7 +437,7 @@
+@@ -431,13 +431,13 @@
+             if (strcmp(dirp->d_name, ".") == 0 || strcmp(dirp->d_name, "..") == 0)
+                 continue;
+ 
+-            unlink(ap_pstrcat(tp, fcgi_dynamic_dir, "/", dirp->d_name, NULL));
++            unlink(apr_pstrcat(tp, fcgi_dynamic_dir, "/", dirp->d_name, NULL));
+         }
+     }
  
  #endif /* !APACHE2 */
  
@@ -28,9 +98,27 @@ diff -urN mod_fastcgi-2.4.2.org/fcgi_config.c mod_fastcgi-2.4.2/fcgi_config.c
  
      return NULL;
  }
+@@ -498,7 +498,7 @@
+     fcgi_socket_dir = arg_nc;
+ 
+ #ifdef WIN32
+-    fcgi_dynamic_dir = ap_pstrcat(cmd->pool, fcgi_socket_dir, "dynamic", NULL);
++    fcgi_dynamic_dir = apr_pstrcat(cmd->pool, fcgi_socket_dir, "dynamic", NULL);
+ #else
+     err = fcgi_config_make_dir(tp, fcgi_socket_dir);
+     if (err != NULL)
+@@ -853,7 +853,7 @@
+     }
+ 
+     if (!*fs_path) {
+-        return ap_pstrcat(tp, name, " requires a path and either a -socket or -host option", NULL);
++        return apr_pstrcat(tp, name, " requires a path and either a -socket or -host option", NULL);
+     }
+ 
+ #ifdef APACHE2
 diff -urN mod_fastcgi-2.4.2.org/fcgi_pm.c mod_fastcgi-2.4.2/fcgi_pm.c
 --- mod_fastcgi-2.4.2.org/fcgi_pm.c	2004-10-06 20:30:46.337894116 +0200
-+++ mod_fastcgi-2.4.2/fcgi_pm.c	2004-10-06 20:49:14.568481703 +0200
++++ mod_fastcgi-2.4.2/fcgi_pm.c	2004-10-06 20:50:22.027030291 +0200
 @@ -576,7 +576,7 @@
          fs->envp[i - 1] = NULL;
      }
@@ -49,6 +137,18 @@ diff -urN mod_fastcgi-2.4.2.org/fcgi_pm.c mod_fastcgi-2.4.2/fcgi_pm.c
          goto CLEANUP;
      }
  
+@@ -668,9 +668,9 @@
+      * the arguments (if there are any).
+      * Build the command string to pass to CreateProcess. 
+      */
+-    quoted_filename = ap_pstrcat(tp, "\"", fs->fs_path, "\"", NULL);
++    quoted_filename = apr_pstrcat(tp, "\"", fs->fs_path, "\"", NULL);
+     if (interpreter && *interpreter) {
+-        pCommand = ap_pstrcat(tp, interpreter, " ", quoted_filename, NULL);
++        pCommand = apr_pstrcat(tp, interpreter, " ", quoted_filename, NULL);
+     }
+     else {
+         pCommand = quoted_filename;
 @@ -744,7 +744,7 @@
          CloseHandle(listen_handle);
      }
@@ -78,7 +178,7 @@ diff -urN mod_fastcgi-2.4.2.org/fcgi_pm.c mod_fastcgi-2.4.2/fcgi_pm.c
  /*
 diff -urN mod_fastcgi-2.4.2.org/fcgi_protocol.c mod_fastcgi-2.4.2/fcgi_protocol.c
 --- mod_fastcgi-2.4.2.org/fcgi_protocol.c	2004-10-06 20:30:46.338893902 +0200
-+++ mod_fastcgi-2.4.2/fcgi_protocol.c	2004-10-06 20:49:14.570481275 +0200
++++ mod_fastcgi-2.4.2/fcgi_protocol.c	2004-10-06 20:50:22.029029863 +0200
 @@ -135,11 +135,11 @@
  {
      table *e = r->subprocess_env;
@@ -142,7 +242,51 @@ diff -urN mod_fastcgi-2.4.2.org/fcgi_protocol.c mod_fastcgi-2.4.2/fcgi_protocol.
                  /* We're gonna consume all thats here */
 diff -urN mod_fastcgi-2.4.2.org/fcgi_util.c mod_fastcgi-2.4.2/fcgi_util.c
 --- mod_fastcgi-2.4.2.org/fcgi_util.c	2004-10-06 20:30:46.339893687 +0200
-+++ mod_fastcgi-2.4.2/fcgi_util.c	2004-10-06 20:49:14.574480418 +0200
++++ mod_fastcgi-2.4.2/fcgi_util.c	2004-10-06 20:50:22.034028792 +0200
+@@ -55,7 +55,7 @@
+ fcgi_util_socket_hash_filename(pool *p, const char *path,
+         const char *user, const char *group)
+ {
+-    char *buf = ap_pstrcat(p, path, user, group, NULL);
++    char *buf = apr_pstrcat(p, path, user, group, NULL);
+ 
+     /* Canonicalize the path (remove "//", ".", "..") */
+     ap_getparents(buf);
+@@ -77,13 +77,13 @@
+     x = strlen(src1);
+ 
+     if (x == 0) {
+-	    p = ap_pstrcat(a, "\\", src2, NULL);
++	    p = apr_pstrcat(a, "\\", src2, NULL);
+     }
+     else if (src1[x - 1] != '\\' && src1[x - 1] != '/') {
+-	    p = ap_pstrcat(a, src1, "\\", src2, NULL);
++	    p = apr_pstrcat(a, src1, "\\", src2, NULL);
+     }
+     else {
+-	    p = ap_pstrcat(a, src1, src2, NULL);
++	    p = apr_pstrcat(a, src1, src2, NULL);
+     }
+ 
+     q = p ;
+@@ -137,7 +137,7 @@
+     int socket_pathLen = strlen(socket_path);
+ 
+     if (socket_pathLen >= sizeof((*socket_addr)->sun_path)) {
+-        return ap_pstrcat(p, "path \"", socket_path,
++        return apr_pstrcat(p, "path \"", socket_path,
+                        "\" is too long for a Domain socket", NULL);
+     }
+ 
+@@ -204,7 +204,7 @@
+     /* Get an in_addr represention of the host */
+     if (host != NULL) {
+         if (convert_string_to_in_addr(host, &(*socket_addr)->sin_addr) != 1) {
+-            return ap_pstrcat(p, "failed to resolve \"", host,
++            return apr_pstrcat(p, "failed to resolve \"", host,
+                            "\" to exactly one IP address", NULL);
+         }
+     } else {
 @@ -367,7 +367,7 @@
      const char *err;
  
@@ -154,7 +298,7 @@ diff -urN mod_fastcgi-2.4.2.org/fcgi_util.c mod_fastcgi-2.4.2/fcgi_util.c
      }
 diff -urN mod_fastcgi-2.4.2.org/mod_fastcgi.c mod_fastcgi-2.4.2/mod_fastcgi.c
 --- mod_fastcgi-2.4.2.org/mod_fastcgi.c	2004-10-06 20:30:46.355890260 +0200
-+++ mod_fastcgi-2.4.2/mod_fastcgi.c	2004-10-06 20:49:14.587477634 +0200
++++ mod_fastcgi-2.4.2/mod_fastcgi.c	2004-10-06 20:50:22.048025794 +0200
 @@ -267,7 +267,7 @@
  
      /* Register to reset to default values when the config pool is cleaned */
@@ -164,6 +308,15 @@ diff -urN mod_fastcgi-2.4.2.org/mod_fastcgi.c mod_fastcgi-2.4.2/mod_fastcgi.c
      ap_unblock_alarms();
  
  #ifdef APACHE2
+@@ -285,7 +285,7 @@
+ #ifdef WIN32
+     if (fcgi_socket_dir == NULL)
+         fcgi_socket_dir = DEFAULT_SOCK_DIR;
+-    fcgi_dynamic_dir = ap_pstrcat(p, fcgi_socket_dir, "dynamic", NULL);
++    fcgi_dynamic_dir = apr_pstrcat(p, fcgi_socket_dir, "dynamic", NULL);
+ #else
+ 
+     if (fcgi_socket_dir == NULL)
 @@ -765,7 +765,7 @@
       * Who responds, this handler or Apache?
       */
