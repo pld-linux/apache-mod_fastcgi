@@ -25,7 +25,7 @@ of server specific APIs.
 %setup -q -n mod_fastcgi_%{version}
 
 %build
-apxs -D SUEXEC_BIN="/usr/sbin/suexec" -o mod_fastcgi.so -c *.c
+apxs -D SUEXEC_BIN="\"\\\"/usr/sbin/suexec\\\"\"" -o mod_fastcgi.so -c *.c
 strip mod_fastcgi.so
 
 %install
