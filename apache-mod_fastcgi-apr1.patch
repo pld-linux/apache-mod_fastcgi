@@ -1,6 +1,6 @@
 diff -urN mod_fastcgi-2.4.2.org/mod_fastcgi.c mod_fastcgi-2.4.2/mod_fastcgi.c
 --- mod_fastcgi-2.4.2.org/mod_fastcgi.c	2004-10-06 20:30:46.355890260 +0200
-+++ mod_fastcgi-2.4.2/mod_fastcgi.c	2004-10-06 20:38:52.593725208 +0200
++++ mod_fastcgi-2.4.2/mod_fastcgi.c	2004-10-06 20:40:47.534101928 +0200
 @@ -267,7 +267,7 @@
  
      /* Register to reset to default values when the config pool is cleaned */
@@ -10,6 +10,15 @@ diff -urN mod_fastcgi-2.4.2.org/mod_fastcgi.c mod_fastcgi-2.4.2/mod_fastcgi.c
      ap_unblock_alarms();
  
  #ifdef APACHE2
+@@ -765,7 +765,7 @@
+      * Who responds, this handler or Apache?
+      */
+     if (hasLocation) {
+-        const char *location = ap_table_get(r->headers_out, "Location");
++        const char *location = apr_table_get(r->headers_out, "Location");
+         /*
+          * Based on internal redirect handling in mod_cgi.c...
+          *
 @@ -2318,7 +2318,7 @@
      }
  
@@ -19,6 +28,24 @@ diff -urN mod_fastcgi-2.4.2.org/mod_fastcgi.c mod_fastcgi-2.4.2/mod_fastcgi.c
      ap_unblock_alarms();
  
  #ifdef WIN32
+@@ -2531,7 +2531,7 @@
+  */
+ static int apache_is_scriptaliased(request_rec *r)
+ {
+-    const char *t = ap_table_get(r->notes, "alias-forced-type");
++    const char *t = apr_table_get(r->notes, "alias-forced-type");
+     return t && (!strcasecmp(t, "cgi-script"));
+ }
+ 
+@@ -2556,7 +2556,7 @@
+             r->method_number = M_GET;
+             ap_table_unset(r->headers_in, "Content-length");
+ 
+-            ap_internal_redirect_handler(ap_table_get(r->headers_out, "Location"), r);
++            ap_internal_redirect_handler(apr_table_get(r->headers_out, "Location"), r);
+             return OK;
+ 
+         case SCAN_CGI_SRV_REDIRECT:
 @@ -2639,16 +2639,16 @@
  
      if (passed) {
@@ -39,3 +66,30 @@ diff -urN mod_fastcgi-2.4.2.org/mod_fastcgi.c mod_fastcgi-2.4.2/mod_fastcgi.c
               (void *)r->err_headers_out, fr->authHeaders, NULL);
      }
  
+@@ -2697,7 +2697,7 @@
+     post_process_auth(fr, authenticated);
+ 
+     /* A redirect shouldn't be allowed during the authentication phase */
+-    if (ap_table_get(r->headers_out, "Location") != NULL) {
++    if (apr_table_get(r->headers_out, "Location") != NULL) {
+         ap_log_rerror(FCGI_LOG_ERR_NOERRNO, r,
+             "FastCGI: FastCgiAuthenticator \"%s\" redirected (not allowed)",
+             dir_config->authenticator);
+@@ -2762,7 +2762,7 @@
+     post_process_auth(fr, authorized);
+ 
+     /* A redirect shouldn't be allowed during the authorization phase */
+-    if (ap_table_get(r->headers_out, "Location") != NULL) {
++    if (apr_table_get(r->headers_out, "Location") != NULL) {
+         ap_log_rerror(FCGI_LOG_ERR_NOERRNO, r,
+             "FastCGI: FastCgiAuthorizer \"%s\" redirected (not allowed)",
+             dir_config->authorizer);
+@@ -2823,7 +2823,7 @@
+     post_process_auth(fr, access_allowed);
+ 
+     /* A redirect shouldn't be allowed during the access check phase */
+-    if (ap_table_get(r->headers_out, "Location") != NULL) {
++    if (apr_table_get(r->headers_out, "Location") != NULL) {
+         ap_log_rerror(FCGI_LOG_ERR_NOERRNO, r,
+             "FastCGI: FastCgiAccessChecker \"%s\" redirected (not allowed)",
+             dir_config->access_checker);
