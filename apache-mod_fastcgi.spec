@@ -4,16 +4,17 @@ Summary(pl):	ObsЁuga protokoЁu FastCGI dla serwera apache
 Summary(ru):	FastCGI - более быстрая версия CGI
 Summary(uk):	FastCGI - б╕льш швидка верс╕я CGI
 Name:		apache-mod_fastcgi
-Version:	2.4.0
+Version:	2.4.2
 Release:	1
 License:	distributable
 Group:		Networking/Daemons
 Source0:	http://www.FastCGI.com/dist/mod_fastcgi-%{version}.tar.gz
-# Source0-md5:	e4f5b1b185db4774021163dd0fcd2c56
+# Source0-md5:	e994414304b535cb99e10b7d1cad1d1e
 Source1:	70_mod_fastcgi.conf
 URL:		http://www.FastCGI.com/
 BuildRequires:	%{apxs}
 BuildRequires:	apache-devel
+BuildRequires:	libtool
 Requires(post,preun):	%{apxs}
 Requires:	apache >= 1.3.1
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -50,14 +51,16 @@ FastCGI - розширення CGI, яке нада╓ можлив╕сть створювати
 %setup -q -n mod_fastcgi-%{version}
 
 %build
-mv Makefile.AP2 Makefile
-make top_dir=/usr/lib/apache INCLUDES=-I/usr/include/apache
+%{__make} -f Makefile.AP2 top_dir=%{_libexecdir} INCLUDES="-I%{_includedir}/apache"
 
 %install
 rm -rf $RPM_BUILD_ROOT
-libtool --mode=install install -d $RPM_BUILD_ROOT{%{_sysconfdir}/httpd/httpd.conf,%{_libexecdir},%{_htmldocdir}}
+install -d $RPM_BUILD_ROOT{%{_sysconfdir}/httpd/httpd.conf,%{_libexecdir},%{_htmldocdir}}
+
 libtool --mode=install install mod_fastcgi.la $RPM_BUILD_ROOT%{_libexecdir}
+
 install docs/*.html $RPM_BUILD_ROOT%{_htmldocdir}
+
 install %{SOURCE1} $RPM_BUILD_ROOT/%{_sysconfdir}/httpd/httpd.conf/
 
 %clean
