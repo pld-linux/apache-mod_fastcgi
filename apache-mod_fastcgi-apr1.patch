@@ -1,6 +1,6 @@
 diff -urN mod_fastcgi-2.4.2.org/fcgi_config.c mod_fastcgi-2.4.2/fcgi_config.c
 --- mod_fastcgi-2.4.2.org/fcgi_config.c	2004-10-06 20:30:46.336894330 +0200
-+++ mod_fastcgi-2.4.2/fcgi_config.c	2004-10-06 20:47:33.355164283 +0200
++++ mod_fastcgi-2.4.2/fcgi_config.c	2004-10-06 20:49:14.557484059 +0200
 @@ -191,7 +191,7 @@
      const char **header;
  
@@ -30,7 +30,7 @@ diff -urN mod_fastcgi-2.4.2.org/fcgi_config.c mod_fastcgi-2.4.2/fcgi_config.c
  }
 diff -urN mod_fastcgi-2.4.2.org/fcgi_pm.c mod_fastcgi-2.4.2/fcgi_pm.c
 --- mod_fastcgi-2.4.2.org/fcgi_pm.c	2004-10-06 20:30:46.337894116 +0200
-+++ mod_fastcgi-2.4.2/fcgi_pm.c	2004-10-06 20:47:33.365162141 +0200
++++ mod_fastcgi-2.4.2/fcgi_pm.c	2004-10-06 20:49:14.568481703 +0200
 @@ -576,7 +576,7 @@
          fs->envp[i - 1] = NULL;
      }
@@ -78,16 +78,59 @@ diff -urN mod_fastcgi-2.4.2.org/fcgi_pm.c mod_fastcgi-2.4.2/fcgi_pm.c
  /*
 diff -urN mod_fastcgi-2.4.2.org/fcgi_protocol.c mod_fastcgi-2.4.2/fcgi_protocol.c
 --- mod_fastcgi-2.4.2.org/fcgi_protocol.c	2004-10-06 20:30:46.338893902 +0200
-+++ mod_fastcgi-2.4.2/fcgi_protocol.c	2004-10-06 20:47:33.368161499 +0200
-@@ -178,7 +178,7 @@
++++ mod_fastcgi-2.4.2/fcgi_protocol.c	2004-10-06 20:49:14.570481275 +0200
+@@ -135,11 +135,11 @@
+ {
+     table *e = r->subprocess_env;
+ 
+-    ap_table_setn(e, "GATEWAY_INTERFACE", "CGI/1.1");
+-    ap_table_setn(e, "SERVER_PROTOCOL", r->protocol);
+-    ap_table_setn(e, "REQUEST_METHOD", r->method);
+-    ap_table_setn(e, "QUERY_STRING", r->args ? r->args : "");
+-    ap_table_setn(e, "REQUEST_URI", apache_original_uri(r));
++    apr_table_setn(e, "GATEWAY_INTERFACE", "CGI/1.1");
++    apr_table_setn(e, "SERVER_PROTOCOL", r->protocol);
++    apr_table_setn(e, "REQUEST_METHOD", r->method);
++    apr_table_setn(e, "QUERY_STRING", r->args ? r->args : "");
++    apr_table_setn(e, "REQUEST_URI", apache_original_uri(r));
+ 
+     /* The FastCGI spec precludes sending of CONTENT_LENGTH, PATH_INFO,
+      * PATH_TRANSLATED, and SCRIPT_NAME (for some reason?).  PATH_TRANSLATED we
+@@ -155,17 +155,17 @@
+      * args and path_info of the original request, and not any that may have
+      * come with the script URI in the include command.  Ugh. */
+     if (!strcmp(r->protocol, "INCLUDED")) {
+-        ap_table_setn(e, "SCRIPT_NAME", r->uri);
++        apr_table_setn(e, "SCRIPT_NAME", r->uri);
+         if (r->path_info && *r->path_info)
+-            ap_table_setn(e, "PATH_INFO", r->path_info);
++            apr_table_setn(e, "PATH_INFO", r->path_info);
+     }
+     else if (!r->path_info || !*r->path_info)
+-        ap_table_setn(e, "SCRIPT_NAME", r->uri);
++        apr_table_setn(e, "SCRIPT_NAME", r->uri);
+     else {
+         int path_info_start = ap_find_path_info(r->uri, r->path_info);
+ 
+-        ap_table_setn(e, "SCRIPT_NAME", ap_pstrndup(r->pool, r->uri, path_info_start));
+-        ap_table_setn(e, "PATH_INFO", r->path_info);
++        apr_table_setn(e, "SCRIPT_NAME", ap_pstrndup(r->pool, r->uri, path_info_start));
++        apr_table_setn(e, "PATH_INFO", r->path_info);
+     }
+ }
+ 
+@@ -178,9 +178,9 @@
          int i = ph->nelts;
  
          for ( ; i; --i, ++elt) {
 -            const char *val = ap_table_get(fr->r->headers_in, *elt);
 +            const char *val = apr_table_get(fr->r->headers_in, *elt);
              if (val) {
-                 ap_table_setn(fr->r->subprocess_env, *elt, val);
+-                ap_table_setn(fr->r->subprocess_env, *elt, val);
++                apr_table_setn(fr->r->subprocess_env, *elt, val);
              }
+         }
+     }
 @@ -373,7 +373,7 @@
  
                  if (fr->fs_stderr == NULL)
@@ -99,7 +142,7 @@ diff -urN mod_fastcgi-2.4.2.org/fcgi_protocol.c mod_fastcgi-2.4.2/fcgi_protocol.
                  /* We're gonna consume all thats here */
 diff -urN mod_fastcgi-2.4.2.org/fcgi_util.c mod_fastcgi-2.4.2/fcgi_util.c
 --- mod_fastcgi-2.4.2.org/fcgi_util.c	2004-10-06 20:30:46.339893687 +0200
-+++ mod_fastcgi-2.4.2/fcgi_util.c	2004-10-06 20:47:33.372160642 +0200
++++ mod_fastcgi-2.4.2/fcgi_util.c	2004-10-06 20:49:14.574480418 +0200
 @@ -367,7 +367,7 @@
      const char *err;
  
@@ -111,7 +154,7 @@ diff -urN mod_fastcgi-2.4.2.org/fcgi_util.c mod_fastcgi-2.4.2/fcgi_util.c
      }
 diff -urN mod_fastcgi-2.4.2.org/mod_fastcgi.c mod_fastcgi-2.4.2/mod_fastcgi.c
 --- mod_fastcgi-2.4.2.org/mod_fastcgi.c	2004-10-06 20:30:46.355890260 +0200
-+++ mod_fastcgi-2.4.2/mod_fastcgi.c	2004-10-06 20:47:33.386157643 +0200
++++ mod_fastcgi-2.4.2/mod_fastcgi.c	2004-10-06 20:49:14.587477634 +0200
 @@ -267,7 +267,7 @@
  
      /* Register to reset to default values when the config pool is cleaned */
@@ -175,6 +218,31 @@ diff -urN mod_fastcgi-2.4.2.org/mod_fastcgi.c mod_fastcgi-2.4.2/mod_fastcgi.c
              return OK;
  
          case SCAN_CGI_SRV_REDIRECT:
+@@ -2612,21 +2612,21 @@
+     if (strncasecmp(key, "Variable-", 9) == 0)
+         key += 9;
+ 
+-    ap_table_setn(t, key, val);
++    apr_table_setn(t, key, val);
+     return 1;
+ }
+ 
+ static int post_process_auth_passed_compat_header(table *t, const char *key, const char * const val)
+ {
+     if (strncasecmp(key, "Variable-", 9) == 0)
+-        ap_table_setn(t, key + 9, val);
++        apr_table_setn(t, key + 9, val);
+ 
+     return 1;
+ }
+ 
+ static int post_process_auth_failed_header(table * const t, const char * const key, const char * const val)
+ {
+-    ap_table_setn(t, key, val);
++    apr_table_setn(t, key, val);
+     return 1;
+ }
+ 
 @@ -2639,16 +2639,16 @@
  
      if (passed) {
@@ -195,6 +263,17 @@ diff -urN mod_fastcgi-2.4.2.org/mod_fastcgi.c mod_fastcgi-2.4.2/mod_fastcgi.c
               (void *)r->err_headers_out, fr->authHeaders, NULL);
      }
  
+@@ -2681,8 +2681,8 @@
+     /* Save the existing subprocess_env, because we're gonna muddy it up */
+     fr->saved_subprocess_env = ap_copy_table(r->pool, r->subprocess_env);
+ 
+-    ap_table_setn(r->subprocess_env, "REMOTE_PASSWD", password);
+-    ap_table_setn(r->subprocess_env, "FCGI_APACHE_ROLE", "AUTHENTICATOR");
++    apr_table_setn(r->subprocess_env, "REMOTE_PASSWD", password);
++    apr_table_setn(r->subprocess_env, "FCGI_APACHE_ROLE", "AUTHENTICATOR");
+ 
+     /* The FastCGI Protocol doesn't differentiate authentication */
+     fr->role = FCGI_AUTHORIZER;
 @@ -2697,7 +2697,7 @@
      post_process_auth(fr, authenticated);
  
@@ -204,6 +283,15 @@ diff -urN mod_fastcgi-2.4.2.org/mod_fastcgi.c mod_fastcgi-2.4.2/mod_fastcgi.c
          ap_log_rerror(FCGI_LOG_ERR_NOERRNO, r,
              "FastCGI: FastCgiAuthenticator \"%s\" redirected (not allowed)",
              dir_config->authenticator);
+@@ -2748,7 +2748,7 @@
+     /* Save the existing subprocess_env, because we're gonna muddy it up */
+     fr->saved_subprocess_env = ap_copy_table(r->pool, r->subprocess_env);
+ 
+-    ap_table_setn(r->subprocess_env, "FCGI_APACHE_ROLE", "AUTHORIZER");
++    apr_table_setn(r->subprocess_env, "FCGI_APACHE_ROLE", "AUTHORIZER");
+ 
+     fr->role = FCGI_AUTHORIZER;
+ 
 @@ -2762,7 +2762,7 @@
      post_process_auth(fr, authorized);
  
@@ -213,6 +301,15 @@ diff -urN mod_fastcgi-2.4.2.org/mod_fastcgi.c mod_fastcgi-2.4.2/mod_fastcgi.c
          ap_log_rerror(FCGI_LOG_ERR_NOERRNO, r,
              "FastCGI: FastCgiAuthorizer \"%s\" redirected (not allowed)",
              dir_config->authorizer);
+@@ -2808,7 +2808,7 @@
+     /* Save the existing subprocess_env, because we're gonna muddy it up */
+     fr->saved_subprocess_env = ap_copy_table(r->pool, r->subprocess_env);
+ 
+-    ap_table_setn(r->subprocess_env, "FCGI_APACHE_ROLE", "ACCESS_CHECKER");
++    apr_table_setn(r->subprocess_env, "FCGI_APACHE_ROLE", "ACCESS_CHECKER");
+ 
+     /* The FastCGI Protocol doesn't differentiate access control */
+     fr->role = FCGI_AUTHORIZER;
 @@ -2823,7 +2823,7 @@
      post_process_auth(fr, access_allowed);
  
