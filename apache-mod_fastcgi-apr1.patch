@@ -1,6 +1,6 @@
 diff -urN mod_fastcgi-2.4.2.org/fcgi_buf.c mod_fastcgi-2.4.2/fcgi_buf.c
 --- mod_fastcgi-2.4.2.org/fcgi_buf.c	2004-10-06 20:30:46.335894544 +0200
-+++ mod_fastcgi-2.4.2/fcgi_buf.c	2004-10-06 21:35:48.998840536 +0200
++++ mod_fastcgi-2.4.2/fcgi_buf.c	2004-10-06 21:38:37.730693694 +0200
 @@ -50,7 +50,7 @@
  {
      Buffer *buf;
@@ -21,7 +21,7 @@ diff -urN mod_fastcgi-2.4.2.org/fcgi_buf.c mod_fastcgi-2.4.2/fcgi_buf.c
          arr->elts = new_elts;
 diff -urN mod_fastcgi-2.4.2.org/fcgi_config.c mod_fastcgi-2.4.2/fcgi_config.c
 --- mod_fastcgi-2.4.2.org/fcgi_config.c	2004-10-06 20:30:46.336894330 +0200
-+++ mod_fastcgi-2.4.2/fcgi_config.c	2004-10-06 21:35:49.003839465 +0200
++++ mod_fastcgi-2.4.2/fcgi_config.c	2004-10-06 21:38:37.736692409 +0200
 @@ -50,7 +50,7 @@
      /* Convert port number */
      tmp = (u_short) strtol(portStr, &cvptr, 10);
@@ -31,7 +31,7 @@ diff -urN mod_fastcgi-2.4.2.org/fcgi_config.c mod_fastcgi-2.4.2/fcgi_config.c
  
      *port = (unsigned short) tmp;
  
-@@ -75,7 +75,7 @@
+@@ -75,11 +75,11 @@
      tmp = strtol(txt, &ptr, 10);
  
      if (*ptr != '\0') {
@@ -40,7 +40,12 @@ diff -urN mod_fastcgi-2.4.2.org/fcgi_config.c mod_fastcgi-2.4.2/fcgi_config.c
  	}
      
  	if (tmp < min || tmp > USHRT_MAX) {
-@@ -101,7 +101,7 @@
+-        return ap_psprintf(p, "\"%u\" must be >= %u and < %u", *num, min, USHRT_MAX);
++        return apr_psprintf(p, "\"%u\" must be >= %u and < %u", *num, min, USHRT_MAX);
+ 	}
+ 
+ 	*num = (u_short) tmp;
+@@ -101,11 +101,11 @@
  
      if (*cp != '\0')
      {
@@ -49,24 +54,35 @@ diff -urN mod_fastcgi-2.4.2.org/fcgi_config.c mod_fastcgi-2.4.2/fcgi_config.c
      }
      else if (*num < min)
      {
-@@ -126,7 +126,7 @@
+-        return ap_psprintf(p, "\"%d\" must be >= %d", *num, min);
++        return apr_psprintf(p, "\"%d\" must be >= %d", *num, min);
+     }
+             
+     return NULL;
+@@ -126,9 +126,9 @@
      *num = (u_int)strtol(val, &ptr, 10);
  
      if (*ptr != '\0')
 -        return ap_pstrcat(p, "\"", val, "\" must be a positive integer", NULL);
 +        return apr_pstrcat(p, "\"", val, "\" must be a positive integer", NULL);
      else if (*num < min)
-         return ap_psprintf(p, "\"%u\" must be >= %u", *num, min);
+-        return ap_psprintf(p, "\"%u\" must be >= %u", *num, min);
++        return apr_psprintf(p, "\"%u\" must be >= %u", *num, min);
      return NULL;
-@@ -147,7 +147,7 @@
+ }
+ 
+@@ -147,9 +147,9 @@
      *num = (float) strtod(val, &ptr);
  
      if (*ptr != '\0')
 -        return ap_pstrcat(p, "\"", val, "\" is not a floating point number", NULL);
 +        return apr_pstrcat(p, "\"", val, "\" is not a floating point number", NULL);
      if (*num < min || *num > max)
-         return ap_psprintf(p, "\"%f\" is not between %f and %f", *num, min, max);
+-        return ap_psprintf(p, "\"%f\" is not between %f and %f", *num, min, max);
++        return apr_psprintf(p, "\"%f\" is not between %f and %f", *num, min, max);
      return NULL;
+ }
+ 
 @@ -160,7 +160,7 @@
      }
  
@@ -85,7 +101,43 @@ diff -urN mod_fastcgi-2.4.2.org/fcgi_config.c mod_fastcgi-2.4.2/fcgi_config.c
      }
  
      header = (const char **)ap_push_array(*array);
-@@ -379,7 +379,7 @@
+@@ -206,7 +206,7 @@
+ static const char *invalid_value(pool *p, const char *cmd, const char *id,
+         const char *opt, const char *err)
+ {
+-    return ap_psprintf(p, "%s%s%s: invalid value for %s: %s",
++    return apr_psprintf(p, "%s%s%s: invalid value for %s: %s",
+                     cmd, id ? " " : "", id ? id : "",  opt, err);
+ }
+ 
+@@ -334,7 +334,7 @@
+         if (mkdir(path, S_IRWXU) != 0)
+ #endif
+         {
+-            return ap_psprintf(tp,
++            return apr_psprintf(tp,
+                 "doesn't exist and can't be created: %s",
+                 strerror(errno));
+         }
+@@ -342,7 +342,7 @@
+ #ifndef WIN32
+         /* If we're root, we're gonna setuid/setgid so we need to chown */
+         if (geteuid() == 0 && chown(path, ap_user_id, ap_group_id) != 0) {
+-            return ap_psprintf(tp,
++            return apr_psprintf(tp,
+                 "can't chown() to the server (uid %ld, gid %ld): %s",
+                 (long)ap_user_id, (long)ap_group_id, strerror(errno));
+         }
+@@ -361,7 +361,7 @@
+                           fcgi_user_id, fcgi_group_id);
+ #endif
+         if (err != NULL) {
+-            return ap_psprintf(tp,
++            return apr_psprintf(tp,
+                 "access for server (uid %ld, gid %ld) failed: %s",
+                 (long)fcgi_user_id, (long)fcgi_group_id, err);
+         }
+@@ -379,10 +379,10 @@
      const char *err;
      pool *tp;
  
@@ -93,16 +145,22 @@ diff -urN mod_fastcgi-2.4.2.org/fcgi_config.c mod_fastcgi-2.4.2/fcgi_config.c
 +    fcgi_dynamic_dir = apr_pstrcat(p, fcgi_socket_dir, "/dynamic", NULL);
  
      if ((err = fcgi_config_make_dir(p, fcgi_dynamic_dir)))
-         return ap_psprintf(p, "can't create dynamic directory \"%s\": %s", fcgi_dynamic_dir, err);
-@@ -419,7 +419,7 @@
+-        return ap_psprintf(p, "can't create dynamic directory \"%s\": %s", fcgi_dynamic_dir, err);
++        return apr_psprintf(p, "can't create dynamic directory \"%s\": %s", fcgi_dynamic_dir, err);
+ 
+     /* Don't step on a running server unless its OK. */
+     if (!wax)
+@@ -419,8 +419,8 @@
  
          dp = ap_popendir(tp, fcgi_dynamic_dir);
          if (dp == NULL) {
 -            ap_destroy_pool(tp);
+-            return ap_psprintf(p, "can't open dynamic directory \"%s\": %s",
 +            apr_destroy_pool(tp);
-             return ap_psprintf(p, "can't open dynamic directory \"%s\": %s",
++            return apr_psprintf(p, "can't open dynamic directory \"%s\": %s",
                  fcgi_dynamic_dir, strerror(errno));
          }
+ 
 @@ -431,13 +431,13 @@
              if (strcmp(dirp->d_name, ".") == 0 || strcmp(dirp->d_name, "..") == 0)
                  continue;
@@ -119,7 +177,24 @@ diff -urN mod_fastcgi-2.4.2.org/fcgi_config.c mod_fastcgi-2.4.2/fcgi_config.c
  
      return NULL;
  }
-@@ -475,7 +475,7 @@
+@@ -461,27 +461,27 @@
+     }
+ 
+     if (fcgi_socket_dir) {
+-        return ap_psprintf(tp, "%s %s: already defined as \"%s\"",
++        return apr_psprintf(tp, "%s %s: already defined as \"%s\"",
+                         name, arg, fcgi_socket_dir);
+     }
+ 
+     err = fcgi_config_set_fcgi_uid_n_gid(1);
+     if (err != NULL)
+-        return ap_psprintf(tp, "%s %s: %s", name, arg, err);
++        return apr_psprintf(tp, "%s %s: %s", name, arg, err);
+ 
+     if (fcgi_servers != NULL) {
+-        return ap_psprintf(tp,
++        return apr_psprintf(tp,
+             "The %s command must preceed static FastCGI server definitions",
              name);
      }
  
@@ -128,7 +203,22 @@ diff -urN mod_fastcgi-2.4.2.org/fcgi_config.c mod_fastcgi-2.4.2/fcgi_config.c
  
  #ifndef WIN32
  
-@@ -498,7 +498,7 @@
+ #ifdef APACHE2
+     if (apr_filepath_merge(&arg_nc, "", arg, 0, cmd->pool))
+-        return ap_psprintf(tp, "%s %s: invalid filepath", name, arg);
++        return apr_psprintf(tp, "%s %s: invalid filepath", name, arg);
+ #else
+     arg_nc = ap_os_canonical_filename(cmd->pool, arg_nc);
+ #endif
+@@ -491,22 +491,22 @@
+ #else /* WIN32 */
+ 
+ 	if (strncmp(arg_nc, "\\\\.\\pipe\\", 9) != 0)
+-		return ap_psprintf(tp, "%s %s is invalid format",name, arg_nc);
++		return apr_psprintf(tp, "%s %s is invalid format",name, arg_nc);
+ 
+ #endif
+ 
      fcgi_socket_dir = arg_nc;
  
  #ifdef WIN32
@@ -137,6 +227,63 @@ diff -urN mod_fastcgi-2.4.2.org/fcgi_config.c mod_fastcgi-2.4.2/fcgi_config.c
  #else
      err = fcgi_config_make_dir(tp, fcgi_socket_dir);
      if (err != NULL)
+-        return ap_psprintf(tp, "%s %s: %s", name, arg_nc, err);
++        return apr_psprintf(tp, "%s %s: %s", name, arg_nc, err);
+ 
+     err = fcgi_config_make_dynamic_dir(cmd->pool, 0);
+     if (err != NULL)
+-        return ap_psprintf(tp, "%s %s: %s", name, arg_nc, err);
++        return apr_psprintf(tp, "%s %s: %s", name, arg_nc, err);
+ #endif
+ 
+     return NULL;
+@@ -519,7 +519,7 @@
+ const char *fcgi_config_set_wrapper(cmd_parms *cmd, void *dummy, const char *arg)
+ {
+ #ifdef WIN32
+-    return ap_psprintf(cmd->temp_pool, 
++    return apr_psprintf(cmd->temp_pool, 
+         "the %s directive is not supported on WIN", cmd->cmd->name);
+ #else
+ 
+@@ -536,16 +536,16 @@
+ 
+     if (fcgi_wrapper)
+     {
+-        return ap_psprintf(tp, "%s was already set to \"%s\"",
++        return apr_psprintf(tp, "%s was already set to \"%s\"",
+                            name, fcgi_wrapper);
+     }
+ 
+     err = fcgi_config_set_fcgi_uid_n_gid(1);
+     if (err != NULL)
+-        return ap_psprintf(tp, "%s %s: %s", name, arg, err);
++        return apr_psprintf(tp, "%s %s: %s", name, arg, err);
+ 
+     if (fcgi_servers != NULL) {
+-        return ap_psprintf(tp,
++        return apr_psprintf(tp,
+             "The %s command must preceed static FastCGI server definitions", name);
+     }
+ 
+@@ -562,7 +562,7 @@
+     {
+ #ifdef APACHE2
+         if (apr_filepath_merge(&wrapper, "", arg, 0, cmd->pool))
+-            return ap_psprintf(tp, "%s %s: invalid filepath", name, arg);
++            return apr_psprintf(tp, "%s %s: invalid filepath", name, arg);
+ #else
+         wrapper = ap_os_canonical_filename(cmd->pool, (char *) arg);
+ #endif
+@@ -573,7 +573,7 @@
+     err = fcgi_util_check_access(tp, wrapper, NULL, X_OK, fcgi_user_id, fcgi_group_id);
+     if (err) 
+     {
+-        return ap_psprintf(tp, "%s: \"%s\" execute access for server "
++        return apr_psprintf(tp, "%s: \"%s\" execute access for server "
+                            "(uid %ld, gid %ld) failed: %s", name, wrapper,
+                            (long) fcgi_user_id, (long) fcgi_group_id, err);
+     }
 @@ -596,7 +596,7 @@
      const char *option, *err;
  
@@ -146,7 +293,112 @@ diff -urN mod_fastcgi-2.4.2.org/fcgi_config.c mod_fastcgi-2.4.2/fcgi_config.c
      unsigned int envc = 0;
  
  #ifdef WIN32
-@@ -789,7 +789,7 @@
+@@ -613,11 +613,11 @@
+         return "AppClass requires a pathname!?";
+ 
+     if ((err = fcgi_config_set_fcgi_uid_n_gid(1)) != NULL)
+-        return ap_psprintf(tp, "%s %s: %s", name, fs_path, err);
++        return apr_psprintf(tp, "%s %s: %s", name, fs_path, err);
+ 
+ #ifdef APACHE2
+     if (apr_filepath_merge(&fs_path, "", fs_path, 0, p))
+-        return ap_psprintf(tp, "%s %s: invalid filepath", name, fs_path);
++        return apr_psprintf(tp, "%s %s: invalid filepath", name, fs_path);
+ #else
+     fs_path = ap_os_canonical_filename(p, fs_path);
+ #endif
+@@ -631,14 +631,14 @@
+                                fcgi_util_get_server_gid(cmd->server));
+     if (s != NULL) {
+         if (fcgi_wrapper) {
+-            return ap_psprintf(tp,
++            return apr_psprintf(tp,
+                 "%s: redefinition of a previously defined FastCGI "
+                 "server \"%s\" with uid=%ld and gid=%ld",
+                 name, fs_path, (long) fcgi_util_get_server_uid(cmd->server),
+                 (long) fcgi_util_get_server_gid(cmd->server));
+         }
+         else {
+-            return ap_psprintf(tp,
++            return apr_psprintf(tp,
+                 "%s: redefinition of a previously defined FastCGI server \"%s\"",
+                 name, fs_path);
+         }
+@@ -646,7 +646,7 @@
+ 
+     err = fcgi_util_fs_is_path_ok(tp, fs_path, NULL);
+     if (err != NULL) {
+-        return ap_psprintf(tp, "%s: \"%s\" %s", name, fs_path, err);
++        return apr_psprintf(tp, "%s: \"%s\" %s", name, fs_path, err);
+     }
+ 
+     s = fcgi_util_fs_new(p);
+@@ -672,7 +672,7 @@
+     
+     SetHandleInformation(mutex, HANDLE_FLAG_INHERIT, TRUE);
+ 
+-    s->mutex_env_string = ap_psprintf(p, "_FCGI_MUTEX_=%ld", mutex);
++    s->mutex_env_string = apr_psprintf(p, "_FCGI_MUTEX_=%ld", mutex);
+ 
+ #endif
+ 
+@@ -730,7 +730,7 @@
+         }
+         else if (strcasecmp(option, "-user") == 0) {
+ #ifdef WIN32
+-            return ap_psprintf(tp, 
++            return apr_psprintf(tp, 
+                 "%s %s: the -user option isn't supported on WIN", name, fs_path);
+ #else
+             s->user = ap_getword_conf(tp, &arg);
+@@ -740,7 +740,7 @@
+         }
+         else if (strcasecmp(option, "-group") == 0) {
+ #ifdef WIN32
+-            return ap_psprintf(tp, 
++            return apr_psprintf(tp, 
+                 "%s %s: the -group option isn't supported on WIN", name, fs_path);
+ #else
+             s->group = ap_getword_conf(tp, &arg);
+@@ -749,7 +749,7 @@
+ #endif
+         }
+         else {
+-            return ap_psprintf(tp, "%s %s: invalid option: %s", name, fs_path, option);
++            return apr_psprintf(tp, "%s %s: invalid option: %s", name, fs_path, option);
+         }
+     } /* while */
+ 
+@@ -758,12 +758,12 @@
+     {
+         if (s->group == NULL)
+         {
+-            s->group = ap_psprintf(tp, "#%ld", fcgi_util_get_server_gid(cmd->server));
++            s->group = apr_psprintf(tp, "#%ld", fcgi_util_get_server_gid(cmd->server));
+         }
+ 
+         if (s->user == NULL)
+         {
+-            s->user = ap_psprintf(p, "#%ld", fcgi_util_get_server_uid(cmd->server)); 
++            s->user = apr_psprintf(p, "#%ld", fcgi_util_get_server_uid(cmd->server)); 
+         }
+ 
+         s->uid = ap_uname2id(s->user);
+@@ -777,19 +777,19 @@
+ 
+     if ((err = fcgi_util_fs_set_uid_n_gid(p, s, s->uid, s->gid)))
+     {
+-        return ap_psprintf(tp, 
++        return apr_psprintf(tp, 
+             "%s %s: invalid user or group: %s", name, fs_path, err);
+     }
+ #endif /* !WIN32 */
+ 
+     if (s->socket_path != NULL && s->port != 0) {
+-        return ap_psprintf(tp,
++        return apr_psprintf(tp,
+                 "%s %s: -port and -socket are mutually exclusive options",
+                 name, fs_path);
      }
  
      /* Move env array to a surviving pool */
@@ -155,7 +407,31 @@ diff -urN mod_fastcgi-2.4.2.org/fcgi_config.c mod_fastcgi-2.4.2/fcgi_config.c
      memcpy(s->envp, envp, sizeof(char *) * envc);
  
      /* Initialize process structs */
-@@ -853,7 +853,7 @@
+@@ -800,12 +800,12 @@
+         err = fcgi_util_socket_make_inet_addr(p, (struct sockaddr_in **)&s->socket_addr,
+                                 &s->socket_addr_len, NULL, s->port);
+         if (err != NULL)
+-            return ap_psprintf(tp, "%s %s: %s", name, fs_path, err);
++            return apr_psprintf(tp, "%s %s: %s", name, fs_path, err);
+ #ifdef WIN32
+         err = fcgi_util_socket_make_inet_addr(p, (struct sockaddr_in **)&s->dest_addr,
+                                           &s->socket_addr_len, "localhost", s->port);
+         if (err != NULL)
+-            return ap_psprintf(tp, "%s %s: %s", name, fs_path, err);
++            return apr_psprintf(tp, "%s %s: %s", name, fs_path, err);
+ #endif
+     } else {
+         if (s->socket_path == NULL)
+@@ -825,7 +825,7 @@
+         err = fcgi_util_socket_make_domain_addr(p, (struct sockaddr_un **)&s->socket_addr,
+                                   &s->socket_addr_len, s->socket_path);
+         if (err != NULL)
+-            return ap_psprintf(tp, "%s %s: %s", name, fs_path, err);
++            return apr_psprintf(tp, "%s %s: %s", name, fs_path, err);
+ #endif
+     }
+ 
+@@ -853,12 +853,12 @@
      }
  
      if (!*fs_path) {
@@ -164,6 +440,113 @@ diff -urN mod_fastcgi-2.4.2.org/fcgi_config.c mod_fastcgi-2.4.2/fcgi_config.c
      }
  
  #ifdef APACHE2
+     if (apr_filepath_merge(&fs_path, "", fs_path, 0, p))
+-        return ap_psprintf(tp, "%s %s: invalid filepath", name, fs_path);
++        return apr_psprintf(tp, "%s %s: invalid filepath", name, fs_path);
+ #else
+     fs_path = ap_os_canonical_filename(p, fs_path);
+ #endif
+@@ -873,7 +873,7 @@
+                                fcgi_util_get_server_gid(cmd->server));
+     if (s != NULL) {
+         if (fcgi_wrapper) {
+-            return ap_psprintf(tp,
++            return apr_psprintf(tp,
+                 "%s: redefinition of a previously defined class \"%s\" "
+                 "with uid=%ld and gid=%ld",
+                 name, fs_path, (long) fcgi_util_get_server_uid(cmd->server),
+@@ -881,7 +881,7 @@
+         }
+         else 
+         {
+-            return ap_psprintf(tp,
++            return apr_psprintf(tp,
+                 "%s: redefinition of previously defined class \"%s\"", name, fs_path);
+         }
+     }
+@@ -920,7 +920,7 @@
+         }
+         else if (strcasecmp(option, "-user") == 0) {
+ #ifdef WIN32
+-            return ap_psprintf(tp, 
++            return apr_psprintf(tp, 
+                 "%s %s: the -user option isn't supported on WIN", name, fs_path);
+ #else
+             s->user = ap_getword_conf(tp, &arg);
+@@ -930,7 +930,7 @@
+         }
+         else if (strcasecmp(option, "-group") == 0) {
+ #ifdef WIN32
+-            return ap_psprintf(tp, 
++            return apr_psprintf(tp, 
+                 "%s %s: the -group option isn't supported on WIN", name, fs_path);
+ #else
+             s->group = ap_getword_conf(tp, &arg);
+@@ -939,7 +939,7 @@
+ #endif
+         }
+         else {
+-            return ap_psprintf(tp, "%s %s: invalid option: %s", name, fs_path, option);
++            return apr_psprintf(tp, "%s %s: invalid option: %s", name, fs_path, option);
+         }
+     } /* while */
+ 
+@@ -949,12 +949,12 @@
+     {
+         if (s->group == NULL)
+         {
+-            s->group = ap_psprintf(tp, "#%ld", fcgi_util_get_server_gid(cmd->server));
++            s->group = apr_psprintf(tp, "#%ld", fcgi_util_get_server_gid(cmd->server));
+         }
+ 
+         if (s->user == NULL)
+         {
+-            s->user = ap_psprintf(p, "#%ld", fcgi_util_get_server_uid(cmd->server));
++            s->user = apr_psprintf(p, "#%ld", fcgi_util_get_server_uid(cmd->server));
+         }
+ 
+         s->uid = ap_uname2id(s->user);
+@@ -968,19 +968,19 @@
+ 
+     if ((err = fcgi_util_fs_set_uid_n_gid(p, s, s->uid, s->gid)))
+     {
+-        return ap_psprintf(tp,
++        return apr_psprintf(tp,
+             "%s %s: invalid user or group: %s", name, fs_path, err);
+     }
+ #endif /* !WIN32 */
+ 
+     /* Require one of -socket or -host, but not both */
+     if (s->socket_path != NULL && s->port != 0) {
+-        return ap_psprintf(tp,
++        return apr_psprintf(tp,
+             "%s %s: -host and -socket are mutually exclusive options",
+             name, fs_path);
+     }
+     if (s->socket_path == NULL && s->port == 0) {
+-        return ap_psprintf(tp,
++        return apr_psprintf(tp,
+             "%s %s: -socket or -host option missing", name, fs_path);
+     }
+ 
+@@ -989,7 +989,7 @@
+         err = fcgi_util_socket_make_inet_addr(p, (struct sockaddr_in **)&s->socket_addr,
+             &s->socket_addr_len, s->host, s->port);
+         if (err != NULL)
+-            return ap_psprintf(tp, "%s %s: %s", name, fs_path, err);
++            return apr_psprintf(tp, "%s %s: %s", name, fs_path, err);
+     } else {
+ 
+         if (fcgi_socket_dir == NULL)
+@@ -1006,7 +1006,7 @@
+         err = fcgi_util_socket_make_domain_addr(p, (struct sockaddr_un **)&s->socket_addr,
+                                   &s->socket_addr_len, s->socket_path);
+         if (err != NULL)
+-            return ap_psprintf(tp, "%s %s: %s", name, fs_path, err);
++            return apr_psprintf(tp, "%s %s: %s", name, fs_path, err);
+ #endif
+     }
+ 
 @@ -1037,7 +1037,7 @@
  
      /* Allocate temp storage for an initial environment */
@@ -173,7 +556,22 @@ diff -urN mod_fastcgi-2.4.2.org/fcgi_config.c mod_fastcgi-2.4.2/fcgi_config.c
  
      err = ap_check_cmd_context(cmd, GLOBAL_ONLY);
      if (err)
-@@ -1144,7 +1144,7 @@
+@@ -1131,20 +1131,20 @@
+             dynamicFlush = TRUE;
+         }
+         else {
+-            return ap_psprintf(tp, "%s: invalid option: %s", name, option);
++            return apr_psprintf(tp, "%s: invalid option: %s", name, option);
+         }
+     } /* while */
+ 
+     if (dynamicProcessSlack >= dynamicMaxProcs + 1) {
+ 	    /* the kill policy would work unexpectedly */
+-    	return ap_psprintf(tp, 
++    	return apr_psprintf(tp, 
+             "%s: processSlack (%u) must be less than maxProcesses (%u) + 1", 
+         	name, dynamicProcessSlack, dynamicMaxProcs);
+     }
  
      /* Move env array to a surviving pool, leave 2 extra slots for 
       * WIN32 _FCGI_MUTEX_ and _FCGI_SHUTDOWN_EVENT_ */
@@ -191,9 +589,32 @@ diff -urN mod_fastcgi-2.4.2.org/fcgi_config.c mod_fastcgi-2.4.2/fcgi_config.c
  
      dir_config->authenticator_options = FCGI_AUTHORITATIVE;
      dir_config->authorizer_options = FCGI_AUTHORITATIVE;
+@@ -1171,7 +1171,7 @@
+ 
+ #ifdef APACHE2
+     if (apr_filepath_merge(&auth_server, "", fs_path, 0, cmd->pool))
+-        return ap_psprintf(tp, "%s %s: invalid filepath", cmd->cmd->name, fs_path);
++        return apr_psprintf(tp, "%s %s: invalid filepath", cmd->cmd->name, fs_path);
+ #else
+     auth_server = (char *) ap_os_canonical_filename(cmd->pool, fs_path);
+ #endif
+@@ -1184,11 +1184,11 @@
+     {
+         const char *err = fcgi_util_fs_is_path_ok(tp, auth_server, NULL);
+         if (err)
+-            return ap_psprintf(tp, "%s: \"%s\" %s", cmd->cmd->name, auth_server, err);
++            return apr_psprintf(tp, "%s: \"%s\" %s", cmd->cmd->name, auth_server, err);
+     }
+ 
+     if (compat && strcasecmp(compat, "-compat"))
+-        return ap_psprintf(cmd->temp_pool, "%s: unknown option: \"%s\"", cmd->cmd->name, compat);
++        return apr_psprintf(cmd->temp_pool, "%s: unknown option: \"%s\"", cmd->cmd->name, compat);
+ 
+     switch((int)cmd->info) {
+         case FCGI_AUTH_TYPE_AUTHENTICATOR:
 diff -urN mod_fastcgi-2.4.2.org/fcgi_pm.c mod_fastcgi-2.4.2/fcgi_pm.c
 --- mod_fastcgi-2.4.2.org/fcgi_pm.c	2004-10-06 20:30:46.337894116 +0200
-+++ mod_fastcgi-2.4.2/fcgi_pm.c	2004-10-06 21:35:49.014837109 +0200
++++ mod_fastcgi-2.4.2/fcgi_pm.c	2004-10-06 21:38:37.746690267 +0200
 @@ -365,7 +365,7 @@
      if (dnEnd == NULL) {
          dirName = "./";
@@ -203,6 +624,15 @@ diff -urN mod_fastcgi-2.4.2.org/fcgi_pm.c mod_fastcgi-2.4.2/fcgi_pm.c
          dirName = memcpy(dirName, fs->fs_path, dnEnd - fs->fs_path);
      }
      if (chdir(dirName) < 0) {
+@@ -489,7 +489,7 @@
+     
+     SetHandleInformation(process->terminationEvent, HANDLE_FLAG_INHERIT, TRUE);
+     
+-    termination_env_string = ap_psprintf(tp, 
++    termination_env_string = apr_psprintf(tp, 
+         "_FCGI_SHUTDOWN_EVENT_=%ld", process->terminationEvent);
+ 
+     while (fs->envp[i]) i++;
 @@ -576,7 +576,7 @@
          fs->envp[i - 1] = NULL;
      }
@@ -212,6 +642,15 @@ diff -urN mod_fastcgi-2.4.2.org/fcgi_pm.c mod_fastcgi-2.4.2/fcgi_pm.c
  
      return proc.pid;
  
+@@ -614,7 +614,7 @@
+     }
+     SetHandleInformation(process->terminationEvent, HANDLE_FLAG_INHERIT, TRUE);
+     
+-    termination_env_string = ap_psprintf(tp, 
++    termination_env_string = apr_psprintf(tp, 
+         "_FCGI_SHUTDOWN_EVENT_=%ld", process->terminationEvent);
+     
+     if (fs->socket_path) 
 @@ -659,7 +659,7 @@
              "FastCGI: %s is not executable; ensure interpreted scripts have "
              "\"#!\" as their first line", 
@@ -251,11 +690,13 @@ diff -urN mod_fastcgi-2.4.2.org/fcgi_pm.c mod_fastcgi-2.4.2/fcgi_pm.c
  
      return pid;
  
-@@ -1072,9 +1072,9 @@
+@@ -1071,10 +1071,10 @@
+             s->flush = dynamicFlush;
              
  #ifdef WIN32
-             s->mutex_env_string = ap_psprintf(sp, "_FCGI_MUTEX_=%ld", mutex);
+-            s->mutex_env_string = ap_psprintf(sp, "_FCGI_MUTEX_=%ld", mutex);
 -            s->fs_path = ap_pstrdup(sp, cjob->fs_path);
++            s->mutex_env_string = apr_psprintf(sp, "_FCGI_MUTEX_=%ld", mutex);
 +            s->fs_path = apr_pstrdup(sp, cjob->fs_path);
  #else
 -            s->fs_path = ap_pstrdup(sp, execName);
@@ -272,7 +713,7 @@ diff -urN mod_fastcgi-2.4.2.org/fcgi_pm.c mod_fastcgi-2.4.2/fcgi_pm.c
              err = fcgi_util_socket_make_domain_addr(tp, (struct sockaddr_un **)&s->socket_addr,
                                            &s->socket_addr_len, s->socket_path);
              if (err) {
-@@ -1120,7 +1120,7 @@
+@@ -1120,11 +1120,11 @@
                          goto BagNewServer;
                      }
                      s->uid = pw->pw_uid;
@@ -281,6 +722,11 @@ diff -urN mod_fastcgi-2.4.2.org/fcgi_pm.c mod_fastcgi-2.4.2/fcgi_pm.c
                      s->username = s->user;
  
                      s->gid = pw->pw_gid;
+-                    s->group = ap_psprintf(sp, "%ld", (long)s->gid);
++                    s->group = apr_psprintf(sp, "%ld", (long)s->gid);
+                 }
+                 else {
+                     struct passwd *pw;
 @@ -1137,11 +1137,11 @@
                              execName, (long)s->uid);
                          goto BagNewServer;
@@ -316,7 +762,7 @@ diff -urN mod_fastcgi-2.4.2.org/fcgi_pm.c mod_fastcgi-2.4.2/fcgi_pm.c
  /*
 diff -urN mod_fastcgi-2.4.2.org/fcgi_protocol.c mod_fastcgi-2.4.2/fcgi_protocol.c
 --- mod_fastcgi-2.4.2.org/fcgi_protocol.c	2004-10-06 20:30:46.338893902 +0200
-+++ mod_fastcgi-2.4.2/fcgi_protocol.c	2004-10-06 21:35:49.017836467 +0200
++++ mod_fastcgi-2.4.2/fcgi_protocol.c	2004-10-06 21:38:37.749689624 +0200
 @@ -110,7 +110,7 @@
      char *first, *last;
  
@@ -397,7 +843,7 @@ diff -urN mod_fastcgi-2.4.2.org/fcgi_protocol.c mod_fastcgi-2.4.2/fcgi_protocol.
                  /* We're gonna consume all thats here */
 diff -urN mod_fastcgi-2.4.2.org/fcgi_util.c mod_fastcgi-2.4.2/fcgi_util.c
 --- mod_fastcgi-2.4.2.org/fcgi_util.c	2004-10-06 20:30:46.339893687 +0200
-+++ mod_fastcgi-2.4.2/fcgi_util.c	2004-10-06 21:35:49.021835610 +0200
++++ mod_fastcgi-2.4.2/fcgi_util.c	2004-10-06 21:38:37.753688768 +0200
 @@ -55,7 +55,7 @@
  fcgi_util_socket_hash_filename(pool *p, const char *path,
          const char *user, const char *group)
@@ -457,6 +903,15 @@ diff -urN mod_fastcgi-2.4.2.org/fcgi_util.c mod_fastcgi-2.4.2/fcgi_util.c
                             "\" to exactly one IP address", NULL);
          }
      } else {
+@@ -227,7 +227,7 @@
+ 
+     if (statBuf == NULL) {    
+         if (stat(path, &myStatBuf) < 0)
+-            return ap_psprintf(tp, "stat(%s) failed: %s", path, strerror(errno));
++            return apr_psprintf(tp, "stat(%s) failed: %s", path, strerror(errno));
+         statBuf = &myStatBuf;
+     }
+     
 @@ -311,7 +311,7 @@
      fcgi_server *s;
  
@@ -475,15 +930,42 @@ diff -urN mod_fastcgi-2.4.2.org/fcgi_util.c mod_fastcgi-2.4.2/fcgi_util.c
      ap_no2slash(path);
      
      for (s = fcgi_servers; s != NULL; s = s->next) {
-@@ -367,7 +367,7 @@
+@@ -367,21 +367,21 @@
      const char *err;
  
      if (finfo == NULL) {
 -        finfo = (struct stat *)ap_palloc(p, sizeof(struct stat));	        
 +        finfo = (struct stat *)apr_palloc(p, sizeof(struct stat));	        
          if (stat(fs_path, finfo) < 0)
-             return ap_psprintf(p, "stat(%s) failed: %s", fs_path, strerror(errno));
+-            return ap_psprintf(p, "stat(%s) failed: %s", fs_path, strerror(errno));
++            return apr_psprintf(p, "stat(%s) failed: %s", fs_path, strerror(errno));
      }
+ 
+     /* No Parse Header scripts aren't allowed.
+      * @@@ Well... we really could quite easily */ 
+     if (strncmp(strrchr(fs_path, '/'), "/nph-", 5) == 0)
+-        return ap_psprintf(p, "NPH scripts cannot be run as FastCGI");
++        return apr_psprintf(p, "NPH scripts cannot be run as FastCGI");
+     
+     if (finfo->st_mode == 0) 
+-        return ap_psprintf(p, "script not found or unable to stat()");
++        return apr_psprintf(p, "script not found or unable to stat()");
+ 
+     if (S_ISDIR(finfo->st_mode)) 
+-        return ap_psprintf(p, "script is a directory!");
++        return apr_psprintf(p, "script is a directory!");
+     
+     /* Let the wrapper determine what it can and can't execute */
+     if (! fcgi_wrapper)
+@@ -392,7 +392,7 @@
+         err = fcgi_util_check_access(p, fs_path, finfo, X_OK, fcgi_user_id, fcgi_group_id);
+ #endif
+         if (err) {
+-            return ap_psprintf(p,
++            return apr_psprintf(p,
+                 "access for server (uid %ld, gid %ld) not allowed: %s",
+                 (long)fcgi_user_id, (long)fcgi_group_id, err);
+         }
 @@ -409,7 +409,7 @@
  fcgi_server *
  fcgi_util_fs_new(pool *p)
@@ -493,7 +975,13 @@ diff -urN mod_fastcgi-2.4.2.org/fcgi_util.c mod_fastcgi-2.4.2/fcgi_util.c
  
      /* Initialize anything who's init state is not zeroizzzzed */
      s->listenQueueDepth = FCGI_DEFAULT_LISTEN_Q;
-@@ -467,7 +467,7 @@
+@@ -462,23 +462,23 @@
+     s->uid = uid;
+     pw = getpwuid(uid);
+     if (pw == NULL) {
+-        return ap_psprintf(p,
++        return apr_psprintf(p,
+             "getpwuid() couldn't determine the username for uid '%ld', "
              "you probably need to modify the User directive: %s",
              (long)uid, strerror(errno));
      }
@@ -502,7 +990,11 @@ diff -urN mod_fastcgi-2.4.2.org/fcgi_util.c mod_fastcgi-2.4.2/fcgi_util.c
      s->username = s->user;
  
      s->gid = gid;
-@@ -478,7 +478,7 @@
+     gr = getgrgid(gid);
+     if (gr == NULL) {
+-        return ap_psprintf(p,
++        return apr_psprintf(p,
+             "getgrgid() couldn't determine the group name for gid '%ld', "
              "you probably need to modify the Group directive: %s",
              (long)gid, strerror(errno));
      }
@@ -522,7 +1014,7 @@ diff -urN mod_fastcgi-2.4.2.org/fcgi_util.c mod_fastcgi-2.4.2/fcgi_util.c
  #ifdef WIN32
 diff -urN mod_fastcgi-2.4.2.org/mod_fastcgi.c mod_fastcgi-2.4.2/mod_fastcgi.c
 --- mod_fastcgi-2.4.2.org/mod_fastcgi.c	2004-10-06 20:30:46.355890260 +0200
-+++ mod_fastcgi-2.4.2/mod_fastcgi.c	2004-10-06 21:35:49.036832397 +0200
++++ mod_fastcgi-2.4.2/mod_fastcgi.c	2004-10-06 21:38:37.767685769 +0200
 @@ -267,7 +267,7 @@
  
      /* Register to reset to default values when the config pool is cleaned */
@@ -541,7 +1033,12 @@ diff -urN mod_fastcgi-2.4.2.org/mod_fastcgi.c mod_fastcgi-2.4.2/mod_fastcgi.c
  #else
  
      if (fcgi_socket_dir == NULL)
-@@ -726,7 +726,7 @@
+@@ -722,11 +722,11 @@
+             }
+             if (statusValue < 0) {
+                 fr->parseHeader = SCAN_CGI_BAD_HEADER;
+-                return ap_psprintf(r->pool, "invalid Status '%s'", value);
++                return apr_psprintf(r->pool, "invalid Status '%s'", value);
              }
              hasStatus = TRUE;
              r->status = statusValue;
@@ -568,6 +1065,20 @@ diff -urN mod_fastcgi-2.4.2.org/mod_fastcgi.c mod_fastcgi-2.4.2/mod_fastcgi.c
          /*
           * Based on internal redirect handling in mod_cgi.c...
           *
+@@ -835,11 +835,11 @@
+     if ((p = strpbrk(name, "\r\n")) != NULL)
+         *p = '\0';
+     fr->parseHeader = SCAN_CGI_BAD_HEADER;
+-    return ap_psprintf(r->pool, "malformed header '%s'", name);
++    return apr_psprintf(r->pool, "malformed header '%s'", name);
+ 
+ DuplicateNotAllowed:
+     fr->parseHeader = SCAN_CGI_BAD_HEADER;
+-    return ap_psprintf(r->pool, "duplicate header '%s'", name);
++    return apr_psprintf(r->pool, "duplicate header '%s'", name);
+ }
+ 
+ /*
 @@ -1019,9 +1019,9 @@
          char *end = strchr(r->uri + 2, '/');
  
@@ -580,6 +1091,17 @@ diff -urN mod_fastcgi-2.4.2.org/mod_fastcgi.c mod_fastcgi-2.4.2/mod_fastcgi.c
          *group = "-";
      }
      else {
+@@ -1030,8 +1030,8 @@
+ 
+         get_request_identity(r, &uid, &gid);
+ 
+-        *user = ap_psprintf(r->pool, "%ld", (long) uid);
+-        *group = ap_psprintf(r->pool, "%ld", (long) gid);
++        *user = apr_psprintf(r->pool, "%ld", (long) uid);
++        *group = apr_psprintf(r->pool, "%ld", (long) gid);
+     }
+ }
+ 
 @@ -1225,7 +1225,7 @@
          {
              /* xxx this handle should live somewhere (see CloseHandle()s below too) */
