@@ -7,7 +7,7 @@ Summary(uk):	FastCGI - б╕льш швидка верс╕я CGI
 Name:		apache-mod_%{mod_name}
 # NOTE: remember about apache1-mod_fastcgi.spec when messing here
 Version:	2.4.2
-Release:	6
+Release:	7
 License:	distributable
 Group:		Networking/Daemons
 Source0:	http://www.FastCGI.com/dist/mod_%{mod_name}-%{version}.tar.gz
@@ -18,16 +18,15 @@ Patch2:		%{name}-socketdir.patch
 Source1:	%{name}.conf
 URL:		http://www.FastCGI.com/
 BuildRequires:	%{apxs}
-BuildRequires:	apache-devel >= 2
+BuildRequires:	apache-devel >= 2.2
 BuildRequires:	libtool
 Requires(post,preun):	%{apxs}
-Requires:	apache >= 2
+Requires:	apache(modules-api) = %apache_modules_api
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_sysconfdir	%(%{apxs} -q SYSCONFDIR)
 %define		_pkglibdir	%(%{apxs} -q LIBEXECDIR)
-# FIXME /var/run/httpd, but apache.spec owns /var/run/apache, so fix there first.
-%define		_socketdir	/var/run/apache/fastcgi
+%define		_socketdir	/var/run/httpd/fastcgi
 
 %description
 This 3rd party module provides support for the FastCGI protocol.
