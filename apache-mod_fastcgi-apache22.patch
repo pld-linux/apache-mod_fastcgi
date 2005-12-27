@@ -1,6 +1,6 @@
 diff -ur mod_fastcgi-2.4.2-o/mod_fastcgi.c mod_fastcgi-2.4.2/mod_fastcgi.c
 --- mod_fastcgi-2.4.2-o/mod_fastcgi.c	2005-12-25 02:45:12.000000000 -0700
-+++ mod_fastcgi-2.4.2/mod_fastcgi.c	2005-12-26 02:58:58.000000000 -0700
++++ mod_fastcgi-2.4.2/mod_fastcgi.c	2005-12-26 22:34:46.000000000 -0700
 @@ -82,6 +82,10 @@
  
  #include "unixd.h"
@@ -71,7 +71,7 @@ diff -ur mod_fastcgi-2.4.2-o/mod_fastcgi.c mod_fastcgi-2.4.2/mod_fastcgi.c
  }
  
  static int check_user_authorization(request_rec *r)
-@@ -2913,6 +2939,15 @@
+@@ -2913,16 +2939,31 @@
  
  #ifdef APACHE2
  
@@ -87,14 +87,19 @@ diff -ur mod_fastcgi-2.4.2-o/mod_fastcgi.c mod_fastcgi-2.4.2/mod_fastcgi.c
  static void register_hooks(apr_pool_t * p)
  {
      /* ap_hook_pre_config(x_pre_config, NULL, NULL, APR_HOOK_MIDDLE); */
-@@ -2923,6 +2958,11 @@
+     ap_hook_post_config(init_module, NULL, NULL, APR_HOOK_MIDDLE);
+     ap_hook_child_init(fcgi_child_init, NULL, NULL, APR_HOOK_MIDDLE);
+     ap_hook_handler(content_handler, NULL, NULL, APR_HOOK_MIDDLE);
+-    ap_hook_check_user_id(check_user_authentication, NULL, NULL, APR_HOOK_MIDDLE);
      ap_hook_access_checker(check_access, NULL, NULL, APR_HOOK_MIDDLE);
      ap_hook_auth_checker(check_user_authorization, NULL, NULL, APR_HOOK_MIDDLE);
      ap_hook_fixups(fixups, NULL, NULL, APR_HOOK_MIDDLE); 
 +#ifdef APACHE22
 +		ap_register_provider(p, AUTHN_PROVIDER_GROUP, "fastcgi", "0",
 +			 &authn_fastcgi_provider);
-+#endif /* APACHE22 */
++#else
++    ap_hook_check_user_id(check_user_authentication, NULL, NULL, APR_HOOK_MIDDLE);
++#endif
 +
  }
  
