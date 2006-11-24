@@ -7,7 +7,7 @@ Summary(uk):	FastCGI - б╕льш швидка верс╕я CGI
 Name:		apache-mod_%{mod_name}
 # NOTE: remember about apache1-mod_fastcgi.spec when messing here
 Version:	2.4.2
-Release:	8
+Release:	9
 License:	distributable
 Group:		Networking/Daemons
 Source0:	http://www.FastCGI.com/dist/mod_%{mod_name}-%{version}.tar.gz
@@ -16,6 +16,7 @@ Patch0:		%{name}-apr1.patch
 Patch1:		%{name}-allow-uid-gid.patch
 Patch2:		%{name}-socketdir.patch
 Patch3:		%{name}-apache22.patch
+Patch4:		%{name}-segv-onload.patch
 Source1:	%{name}.conf
 URL:		http://www.FastCGI.com/
 BuildRequires:	%{apxs}
@@ -60,6 +61,7 @@ FastCGI - розширення CGI, яке нада╓ можлив╕сть створювати
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
+%patch4 -p1
 
 %build
 %{__make} -f Makefile.AP2 \
