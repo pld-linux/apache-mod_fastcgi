@@ -1,9 +1,9 @@
 %define		mod_name	fastcgi
 %define 	apxs		/usr/sbin/apxs
 Summary:	Support for the FastCGI protocol for apache webserver
-Summary(pl):	ObsЁuga protokoЁu FastCGI dla serwera apache
-Summary(ru):	FastCGI - более быстрая версия CGI
-Summary(uk):	FastCGI - б╕льш швидка верс╕я CGI
+Summary(pl.UTF-8):   Obsе┌uga protokoе┌u FastCGI dla serwera apache
+Summary(ru.UTF-8):   FastCGI - п╠п╬п╩п╣п╣ п╠я▀я│я┌я─п╟я▐ п╡п╣я─я│п╦я▐ CGI
+Summary(uk.UTF-8):   FastCGI - п╠я√п╩я▄я┬ я┬п╡п╦п╢п╨п╟ п╡п╣я─я│я√я▐ CGI
 Name:		apache-mod_%{mod_name}
 # NOTE: remember about apache1-mod_fastcgi.spec when messing here
 Version:	2.4.2
@@ -36,24 +36,24 @@ FastCGI is a language independent, scalable, open extension to CGI
 that provides high performance and persistence without the limitations
 of server specific APIs.
 
-%description -l pl
-To jest moduЁ apache dodaj╠cy obsЁugЙ protokoЁu FastCGI. FastCGI jest
-niezale©nym od jЙzyka, skalowalnym, otwartym rozszerzeniem CGI daj╠cym
-du©╠ wydajno╤Ф bez ograniczania API specyficznego dla serwera.
+%description -l pl.UTF-8
+To jest moduе┌ apache dodajд┘cy obsе┌ugд≥ protokoе┌u FastCGI. FastCGI jest
+niezaleе╪nym od jд≥zyka, skalowalnym, otwartym rozszerzeniem CGI dajд┘cym
+duе╪д┘ wydajnoе⌡д┤ bez ograniczania API specyficznego dla serwera.
 
-%description -l ru
-FastCGI - расширение CGI, которое предоставляет возможность создавать
-высокопроизводительные Internet-приложения без необходимости
-использовать специфические для каждого web-сервера API.
+%description -l ru.UTF-8
+FastCGI - я─п╟я│я┬п╦я─п╣п╫п╦п╣ CGI, п╨п╬я┌п╬я─п╬п╣ п©я─п╣п╢п╬я│я┌п╟п╡п╩я▐п╣я┌ п╡п╬п╥п╪п╬п╤п╫п╬я│я┌я▄ я│п╬п╥п╢п╟п╡п╟я┌я▄
+п╡я▀я│п╬п╨п╬п©я─п╬п╦п╥п╡п╬п╢п╦я┌п╣п╩я▄п╫я▀п╣ Internet-п©я─п╦п╩п╬п╤п╣п╫п╦я▐ п╠п╣п╥ п╫п╣п╬п╠я┘п╬п╢п╦п╪п╬я│я┌п╦
+п╦я│п©п╬п╩я▄п╥п╬п╡п╟я┌я▄ я│п©п╣я├п╦я└п╦я┤п╣я│п╨п╦п╣ п╢п╩я▐ п╨п╟п╤п╢п╬пЁп╬ web-я│п╣я─п╡п╣я─п╟ API.
 
-Скорость API web-серверов со всеми преимуществами CGI.
+п║п╨п╬я─п╬я│я┌я▄ API web-я│п╣я─п╡п╣я─п╬п╡ я│п╬ п╡я│п╣п╪п╦ п©я─п╣п╦п╪я┐я┴п╣я│я┌п╡п╟п╪п╦ CGI.
 
-%description -l uk
-FastCGI - розширення CGI, яке нада╓ можлив╕сть створювати
-високопродуктивн╕ Internet-програми без необх╕дност╕ використання
-специф╕чних для кожного web-серверу API.
+%description -l uk.UTF-8
+FastCGI - я─п╬п╥я┬п╦я─п╣п╫п╫я▐ CGI, я▐п╨п╣ п╫п╟п╢п╟я■ п╪п╬п╤п╩п╦п╡я√я│я┌я▄ я│я┌п╡п╬я─я▌п╡п╟я┌п╦
+п╡п╦я│п╬п╨п╬п©я─п╬п╢я┐п╨я┌п╦п╡п╫я√ Internet-п©я─п╬пЁя─п╟п╪п╦ п╠п╣п╥ п╫п╣п╬п╠я┘я√п╢п╫п╬я│я┌я√ п╡п╦п╨п╬я─п╦я│я┌п╟п╫п╫я▐
+я│п©п╣я├п╦я└я√я┤п╫п╦я┘ п╢п╩я▐ п╨п╬п╤п╫п╬пЁп╬ web-я│п╣я─п╡п╣я─я┐ API.
 
-Швидк╕сть API web-сервер╕в з╕ вс╕ма перевагами CGI.
+п╗п╡п╦п╢п╨я√я│я┌я▄ API web-я│п╣я─п╡п╣я─я√п╡ п╥я√ п╡я│я√п╪п╟ п©п╣я─п╣п╡п╟пЁп╟п╪п╦ CGI.
 
 %prep
 %setup -q -n mod_%{mod_name}-%{version}
