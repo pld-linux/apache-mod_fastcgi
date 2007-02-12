@@ -1,9 +1,9 @@
 %define		mod_name	fastcgi
 %define 	apxs		/usr/sbin/apxs
 Summary:	Support for the FastCGI protocol for apache webserver
-Summary(pl.UTF-8):   Obsługa protokołu FastCGI dla serwera apache
-Summary(ru.UTF-8):   FastCGI - более быстрая версия CGI
-Summary(uk.UTF-8):   FastCGI - більш швидка версія CGI
+Summary(pl.UTF-8):	Obsługa protokołu FastCGI dla serwera apache
+Summary(ru.UTF-8):	FastCGI - более быстрая версия CGI
+Summary(uk.UTF-8):	FastCGI - більш швидка версія CGI
 Name:		apache-mod_%{mod_name}
 # NOTE: remember about apache1-mod_fastcgi.spec when messing here
 Version:	2.4.2
