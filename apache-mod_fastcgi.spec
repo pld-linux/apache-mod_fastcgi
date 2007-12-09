@@ -19,7 +19,7 @@ Patch3:		%{name}-apache22.patch
 Patch4:		%{name}-segv-onload.patch
 Source1:	%{name}.conf
 URL:		http://www.FastCGI.com/
-BuildRequires:	apache-apxs >= 2.2
+BuildRequires:	%{apxs}
 BuildRequires:	apache-devel >= 2.2
 BuildRequires:	libtool
 BuildRequires:	rpmbuild(macros) >= 1.268
