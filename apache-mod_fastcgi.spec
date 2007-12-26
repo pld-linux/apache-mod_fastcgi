@@ -7,7 +7,7 @@ Summary(uk.UTF-8):	FastCGI - більш швидка версія CGI
 Name:		apache-mod_%{mod_name}
 # NOTE: remember about apache1-mod_fastcgi.spec when messing here
 Version:	2.4.2
-Release:	9
+Release:	10
 License:	distributable
 Group:		Networking/Daemons
 Source0:	http://www.FastCGI.com/dist/mod_%{mod_name}-%{version}.tar.gz
@@ -26,8 +26,8 @@ BuildRequires:	rpmbuild(macros) >= 1.268
 Requires:	apache(modules-api) = %apache_modules_api
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
-%define		_pkglibdir	%(%{apxs} -q LIBEXECDIR 2>/dev/null)
-%define		_sysconfdir	%(%{apxs} -q SYSCONFDIR 2>/dev/null)
+%define		apacheconfdir	%(%{apxs} -q SYSCONFDIR 2>/dev/null)/conf.d
+%define		apachelibdir	%(%{apxs} -q LIBEXECDIR 2>/dev/null)
 %define		_socketdir	/var/run/httpd/fastcgi
 
 %description
@@ -65,16 +65,16 @@ FastCGI - розширення CGI, яке надає можливість ст�
 
 %build
 %{__make} -f Makefile.AP2 \
-	top_dir=%{_pkglibdir} \
+	top_dir=%{apachelibdir} \
 	INCLUDES="-I%(%{apxs} -q INCLUDEDIR)" \
 	EXTRA_CFLAGS='-DAPACHE22'
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{%{_pkglibdir},%{_sysconfdir}/httpd.conf,%{_socketdir}/dynamic}
+install -d $RPM_BUILD_ROOT{%{apachelibdir},%{apacheconfdir},%{_socketdir}/dynamic}
 
-install .libs/mod_%{mod_name}.so $RPM_BUILD_ROOT%{_pkglibdir}
-install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/httpd.conf/90_mod_%{mod_name}.conf
+install .libs/mod_%{mod_name}.so $RPM_BUILD_ROOT%{apachelibdir}
+install %{SOURCE1} $RPM_BUILD_ROOT%{apacheconfdir}/90_mod_%{mod_name}.conf
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -90,7 +90,7 @@ fi
 %files
 %defattr(644,root,root,755)
 %doc docs/LICENSE.TERMS CHANGES docs/*.html
-%attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/httpd.conf/*_mod_%{mod_name}.conf
-%attr(755,root,root) %{_pkglibdir}/*.so
+%attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{apacheconfdir}/*_mod_%{mod_name}.conf
+%attr(755,root,root) %{apachelibdir}/*.so
 %dir %attr(770,root,http) %{_socketdir}
 %dir %attr(770,root,http) %{_socketdir}/dynamic
