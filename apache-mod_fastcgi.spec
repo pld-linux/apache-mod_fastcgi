@@ -6,12 +6,12 @@ Summary(ru.UTF-8):	FastCGI - более быстрая версия CGI
 Summary(uk.UTF-8):	FastCGI - більш швидка версія CGI
 Name:		apache-mod_%{mod_name}
 # NOTE: remember about apache1-mod_fastcgi.spec when messing here
-Version:	2.4.2
-Release:	10
+Version:	2.4.6
+Release:	1
 License:	distributable
 Group:		Networking/Daemons
 Source0:	http://www.FastCGI.com/dist/mod_%{mod_name}-%{version}.tar.gz
-# Source0-md5:	e994414304b535cb99e10b7d1cad1d1e
+# Source0-md5:	a21a613dd5dacf4c8ad88c8550294fed
 Patch0:		%{name}-apr1.patch
 Patch1:		%{name}-allow-uid-gid.patch
 Patch2:		%{name}-socketdir.patch
