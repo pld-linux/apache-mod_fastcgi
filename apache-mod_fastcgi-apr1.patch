@@ -961,7 +961,7 @@ diff -urN mod_fastcgi-2.4.2.org/fcgi_util.c mod_fastcgi-2.4.2/fcgi_util.c
      ap_no2slash(path);
      
      for (s = fcgi_servers; s != NULL; s = s->next) {
-@@ -367,21 +367,21 @@
+@@ -367,16 +367,16 @@
      const char *err;
  
      if (finfo == NULL) {
@@ -971,12 +971,6 @@ diff -urN mod_fastcgi-2.4.2.org/fcgi_util.c mod_fastcgi-2.4.2/fcgi_util.c
 -            return ap_psprintf(p, "stat(%s) failed: %s", fs_path, strerror(errno));
 +            return apr_psprintf(p, "stat(%s) failed: %s", fs_path, strerror(errno));
      }
- 
-     /* No Parse Header scripts aren't allowed.
-      * @@@ Well... we really could quite easily */ 
-     if (strncmp(strrchr(fs_path, '/'), "/nph-", 5) == 0)
--        return ap_psprintf(p, "NPH scripts cannot be run as FastCGI");
-+        return apr_psprintf(p, "NPH scripts cannot be run as FastCGI");
      
      if (finfo->st_mode == 0) 
 -        return ap_psprintf(p, "script not found or unable to stat()");
@@ -1078,15 +1072,18 @@ diff -urN mod_fastcgi-2.4.2.org/mod_fastcgi.c mod_fastcgi-2.4.2/mod_fastcgi.c
              continue;
          }
  
-@@ -736,7 +736,7 @@
-                     goto DuplicateNotAllowed;
+@@ -738,9 +738,9 @@
                  }
                  hasContentType = TRUE;
+ #ifdef APACHE2                
+-                ap_set_content_type(r, value);
++                apr_set_content_type(r, value);
+ #else
 -                r->content_type = ap_pstrdup(r->pool, value);
 +                r->content_type = apr_pstrdup(r->pool, value);
+ #endif                
                  continue;
              }
- 
 @@ -745,16 +745,16 @@
                      goto DuplicateNotAllowed;
                  }
