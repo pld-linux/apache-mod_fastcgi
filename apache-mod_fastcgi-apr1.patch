@@ -1072,12 +1072,9 @@ diff -urN mod_fastcgi-2.4.2.org/mod_fastcgi.c mod_fastcgi-2.4.2/mod_fastcgi.c
              continue;
          }
  
-@@ -738,9 +738,9 @@
-                 }
-                 hasContentType = TRUE;
+@@ -738,7 +738,7 @@
  #ifdef APACHE2                
--                ap_set_content_type(r, value);
-+                apr_set_content_type(r, value);
+                 ap_set_content_type(r, value);
  #else
 -                r->content_type = ap_pstrdup(r->pool, value);
 +                r->content_type = apr_pstrdup(r->pool, value);

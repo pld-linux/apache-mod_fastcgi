@@ -12,15 +12,6 @@ diff -Nur mod_fastcgi-2.4.6.orig/mod_fastcgi.c mod_fastcgi-2.4.6.apache22/mod_fa
  #endif
  #endif
  
-@@ -738,7 +742,7 @@
-                 }
-                 hasContentType = TRUE;
- #ifdef APACHE2                
--                apr_set_content_type(r, value);
-+                ap_set_content_type(r, value);
- #else
-                 r->content_type = apr_pstrdup(r->pool, value);
- #endif                
 @@ -2697,10 +2701,15 @@
      r->status_line = NULL;
  }
