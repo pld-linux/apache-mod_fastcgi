@@ -48,7 +48,7 @@ diff -urN mod_fastcgi-2.4.2.org/fcgi_pm.c mod_fastcgi-2.4.2/fcgi_pm.c
                      s->uid = (uid_t)atol(user);
                      pw = getpwuid(s->uid);
                      if (!pw) {
-+			s->username = apr_psprintf(sp, "%ld", (long)s->uid);
++			s->username = ap_psprintf(sp, "%ld", (long)s->uid);
 +			/*
                          ap_log_error(FCGI_LOG_CRIT, fcgi_apache_main_server,
                              "FastCGI: can't create (dynamic) server \"%s\": can't get uid/gid for wrapper: getwpuid(%ld) failed",
@@ -57,12 +57,12 @@ diff -urN mod_fastcgi-2.4.2.org/fcgi_pm.c mod_fastcgi-2.4.2/fcgi_pm.c
 -                    }
 +			*/
 +                    } else
-+			s->username = apr_pstrdup(sp, pw->pw_name);
-                     s->user = apr_pstrdup(sp, user);
--                    s->username = apr_pstrdup(sp, pw->pw_name);
++			s->username = ap_pstrdup(sp, pw->pw_name);
+                     s->user = ap_pstrdup(sp, user);
+-                    s->username = ap_pstrdup(sp, pw->pw_name);
  
                      s->gid = (gid_t)atol(group);
-                     s->group = apr_pstrdup(sp, group);
+                     s->group = ap_pstrdup(sp, group);
 diff -urN mod_fastcgi-2.4.2.org/fcgi_util.c mod_fastcgi-2.4.2/fcgi_util.c
 --- mod_fastcgi-2.4.2.org/fcgi_util.c	2004-03-07 18:43:25.803230257 +0100
 +++ mod_fastcgi-2.4.2/fcgi_util.c	2004-03-07 22:39:30.637790026 +0100
@@ -70,31 +70,31 @@ diff -urN mod_fastcgi-2.4.2.org/fcgi_util.c mod_fastcgi-2.4.2/fcgi_util.c
      s->uid = uid;
      pw = getpwuid(uid);
      if (pw == NULL) {
-+	s->user = apr_psprintf(p, "%ld", uid);
++	s->user = ap_psprintf(p, "%ld", uid);
 +	if (s->user == NULL)
-         return apr_psprintf(p,
+         return ap_psprintf(p,
              "getpwuid() couldn't determine the username for uid '%ld', "
              "you probably need to modify the User directive: %s",
              (long)uid, strerror(errno));
 -    }
--    s->user = apr_pstrdup(p, pw->pw_name);
+-    s->user = ap_pstrdup(p, pw->pw_name);
 +    } else
-+	s->user = apr_pstrdup(p, pw->pw_name);
++	s->user = ap_pstrdup(p, pw->pw_name);
      s->username = s->user;
  
      s->gid = gid;
      gr = getgrgid(gid);
      if (gr == NULL) {
-+	s->group = apr_psprintf(p, "%ld", gid);
++	s->group = ap_psprintf(p, "%ld", gid);
 +	if (s->group == NULL)
-         return apr_psprintf(p,
+         return ap_psprintf(p,
              "getgrgid() couldn't determine the group name for gid '%ld', "
              "you probably need to modify the Group directive: %s",
              (long)gid, strerror(errno));
 -    }
--    s->group = apr_pstrdup(p, gr->gr_name);
+-    s->group = ap_pstrdup(p, gr->gr_name);
 +    } else
-+    	s->group = apr_pstrdup(p, gr->gr_name);
++    	s->group = ap_pstrdup(p, gr->gr_name);
  
  #endif /* !WIN32 */
  
