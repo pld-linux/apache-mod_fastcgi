@@ -1,0 +1,11 @@
+--- mod_fastcgi-2.4.2/mod_fastcgi.h~	2008-10-14 14:24:51.000000000 +0300
++++ mod_fastcgi-2.4.2/mod_fastcgi.h	2008-10-14 14:25:20.950443891 +0300
+@@ -62,7 +62,7 @@
+ #define MAX_INIT_ENV_VARS 64               /* max # of -initial-env options */
+ 
+ /* max number of chars in a line of stderr we can handle from a FastCGI Server */
+-#define FCGI_SERVER_MAX_STDERR_LINE_LEN 1023     
++#define FCGI_SERVER_MAX_STDERR_LINE_LEN 8191
+ 
+ /* size of the buffer the PM uses to read records from the request handlers */
+ #define FCGI_MSGS_BUFSIZE  32 * 512
