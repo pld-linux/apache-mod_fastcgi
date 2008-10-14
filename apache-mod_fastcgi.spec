@@ -17,7 +17,6 @@ Patch1:		%{name}-socketdir.patch
 Patch2:		%{name}-stderr-buf.patch
 Patch3:		%{name}-segv-onload.patch
 Patch4:		%{name}-apache22.patch
-Source1:	%{name}.conf
 URL:		http://www.fastcgi.com/
 BuildRequires:	%{apxs}
 BuildRequires:	apache-devel >= 2.2
@@ -74,7 +73,8 @@ rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{%{_pkglibdir},%{_sysconfdir},%{_socketdir}/dynamic}
 
 install .libs/mod_%{mod_name}.so $RPM_BUILD_ROOT%{_pkglibdir}
-install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/90_mod_%{mod_name}.conf
+echo 'LoadModule %{mod_name}_module	modules/mod_%{mod_name}.so' > \
+	$RPM_BUILD_ROOT%{_sysconfdir}/90_mod_%{mod_name}.conf
 
 %clean
 rm -rf $RPM_BUILD_ROOT
