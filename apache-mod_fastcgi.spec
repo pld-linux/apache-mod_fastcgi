@@ -12,11 +12,11 @@ License:	distributable
 Group:		Networking/Daemons
 Source0:	http://www.FastCGI.com/dist/mod_%{mod_name}-%{version}.tar.gz
 # Source0-md5:	a21a613dd5dacf4c8ad88c8550294fed
-Patch0:		%{name}-apr1.patch
-Patch1:		%{name}-allow-uid-gid.patch
-Patch2:		%{name}-socketdir.patch
-Patch3:		%{name}-apache22.patch
-Patch4:		%{name}-segv-onload.patch
+Patch0:		%{name}-allow-uid-gid.patch
+Patch1:		%{name}-socketdir.patch
+Patch3:		%{name}-segv-onload.patch
+Patch4:		%{name}-apr1.patch
+Patch5:		%{name}-apache22.patch
 Source1:	%{name}.conf
 URL:		http://www.FastCGI.com/
 BuildRequires:	%{apxs}
@@ -59,9 +59,9 @@ FastCGI - розширення CGI, яке надає можливість ст�
 %setup -q -n mod_%{mod_name}-%{version}
 %patch0 -p1
 %patch1 -p1
-%patch2 -p1
 %patch3 -p1
 %patch4 -p1
+%patch5 -p1
 
 %build
 %{__make} -f Makefile.AP2 \
