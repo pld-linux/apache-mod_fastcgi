@@ -9,7 +9,7 @@ Name:		apache-mod_%{mod_name}
 Version:	2.4.6
 Release:	5
 License:	distributable
-Group:		Networking/Daemons
+Group:		Networking/Daemons/HTTP
 Source0:	http://www.fastcgi.com/dist/mod_%{mod_name}-%{version}.tar.gz
 # Source0-md5:	a21a613dd5dacf4c8ad88c8550294fed
 Patch0:		%{name}-allow-uid-gid.patch
