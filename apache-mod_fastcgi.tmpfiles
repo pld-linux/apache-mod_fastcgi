@@ -1,0 +1,2 @@
+d /var/run/httpd/fastcgi 0770 root http -
+d /var/run/httpd/fastcgi/dynamic 0770 root http -
