@@ -7,11 +7,12 @@ Summary(uk.UTF-8):	FastCGI - більш швидка версія CGI
 Name:		apache-mod_%{mod_name}
 # NOTE: remember about apache1-mod_fastcgi.spec when messing here
 Version:	2.4.6
-Release:	5
+Release:	6
 License:	distributable
 Group:		Networking/Daemons/HTTP
 Source0:	http://www.fastcgi.com/dist/mod_%{mod_name}-%{version}.tar.gz
 # Source0-md5:	a21a613dd5dacf4c8ad88c8550294fed
+Source1:	%{name}.tmpfiles
 Patch0:		%{name}-allow-uid-gid.patch
 Patch1:		%{name}-socketdir.patch
 Patch2:		%{name}-stderr-buf.patch
@@ -70,11 +71,14 @@ FastCGI - розширення CGI, яке надає можливість ст�
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{%{_pkglibdir},%{_sysconfdir},%{_socketdir}/dynamic}
+install -d $RPM_BUILD_ROOT{%{_pkglibdir},%{_sysconfdir},%{_socketdir}/dynamic} \
+	$RPM_BUILD_ROOT/usr/lib/tmpfiles.d
 
 install .libs/mod_%{mod_name}.so $RPM_BUILD_ROOT%{_pkglibdir}
 echo 'LoadModule %{mod_name}_module	modules/mod_%{mod_name}.so' > \
 	$RPM_BUILD_ROOT%{_sysconfdir}/90_mod_%{mod_name}.conf
+
+install %{SOURCE1} $RPM_BUILD_ROOT/usr/lib/tmpfiles.d/%{name}.conf
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -94,3 +98,4 @@ fi
 %attr(755,root,root) %{_pkglibdir}/*.so
 %dir %attr(770,root,http) %{_socketdir}
 %dir %attr(770,root,http) %{_socketdir}/dynamic
+/usr/lib/tmpfiles.d/%{name}.conf
