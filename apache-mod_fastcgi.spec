@@ -17,7 +17,7 @@ Patch0:		%{name}-allow-uid-gid.patch
 Patch1:		%{name}-socketdir.patch
 Patch2:		%{name}-stderr-buf.patch
 Patch3:		%{name}-segv-onload.patch
-Patch4:		%{name}-apache22.patch
+Patch4:		%{name}-apache24.patch
 URL:		http://www.fastcgi.com/
 BuildRequires:	%{apxs}
 BuildRequires:	apache-devel >= 2.2
