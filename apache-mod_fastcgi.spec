@@ -7,7 +7,7 @@ Summary(uk.UTF-8):	FastCGI - більш швидка версія CGI
 Name:		apache-mod_%{mod_name}
 # NOTE: remember about apache1-mod_fastcgi.spec when messing here
 Version:	2.4.6
-Release:	7
+Release:	8
 License:	distributable
 Group:		Networking/Daemons/HTTP
 Source0:	http://www.fastcgi.com/dist/mod_%{mod_name}-%{version}.tar.gz
